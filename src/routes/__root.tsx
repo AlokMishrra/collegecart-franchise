@@ -72,14 +72,11 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Lovable App" },
-      { name: "description", content: "Lovable Generated Project" },
-      { name: "author", content: "Lovable" },
-      { property: "og:title", content: "Lovable App" },
-      { property: "og:description", content: "Lovable Generated Project" },
+      { title: "CollegeCart — Campus Delivery Franchise" },
+      { name: "description", content: "Join CollegeCart Franchise and build a profitable campus delivery business across India." },
+      { property: "og:title", content: "CollegeCart — Campus Delivery Franchise" },
+      { property: "og:description", content: "Join CollegeCart Franchise and build a profitable campus delivery business across India." },
       { property: "og:type", content: "website" },
-      { name: "twitter:card", content: "summary" },
-      { name: "twitter:site", content: "@Lovable" },
     ],
     links: [
       {
