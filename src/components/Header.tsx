@@ -1,16 +1,16 @@
 import { Link } from "@tanstack/react-router";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { Menu, X } from "lucide-react";
 import CollegeCartLogo from "./CollegeCartLogo";
 
 const navLinks = [
-  { to: "/", label: "Home" },
-  { to: "/about", label: "About Us" },
-  { to: "/how-it-works", label: "How It Works" },
-  { to: "/why-us", label: "Why Us" },
-  { to: "/franchise-process", label: "Franchise Process" },
-  { to: "/support", label: "Support" },
-] as const;
+  { href: "#home", label: "Home" },
+  { href: "#about", label: "About Us" },
+  { href: "#how-it-works", label: "How It Works" },
+  { href: "#why-us", label: "Why Us" },
+  { href: "#franchise-process", label: "Franchise Process" },
+  { href: "#support", label: "Support" },
+];
 
 export default function Header() {
   const [scrolled, setScrolled] = useState(false);
@@ -22,34 +22,47 @@ export default function Header() {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
+  const scrollTo = useCallback((href: string) => {
+    setMobileOpen(false);
+    const id = href.replace("#", "");
+    const el = document.getElementById(id);
+    if (el) {
+      const top = el.getBoundingClientRect().top + window.scrollY - 70;
+      window.scrollTo({ top, behavior: "smooth" });
+    }
+  }, []);
+
   return (
     <header
       className={`sticky top-0 z-50 bg-background transition-shadow ${scrolled ? "shadow-md border-b border-border-light" : ""}`}
     >
       <div className="container-main flex items-center justify-between h-16">
-        <Link to="/">
+        <a href="#home" onClick={(e) => { e.preventDefault(); scrollTo("#home"); }}>
           <CollegeCartLogo />
-        </Link>
+        </a>
 
         {/* Desktop nav */}
         <nav className="hidden lg:flex items-center gap-6">
           {navLinks.map((l) => (
-            <Link
-              key={l.to}
-              to={l.to}
-              className="text-sm font-medium text-body-muted hover:text-navy transition-colors"
-              activeProps={{ className: "text-sm font-medium text-navy font-bold" }}
-              activeOptions={{ exact: true }}
+            <a
+              key={l.href}
+              href={l.href}
+              onClick={(e) => { e.preventDefault(); scrollTo(l.href); }}
+              className="text-sm font-medium text-body-muted hover:text-navy transition-colors cursor-pointer"
             >
               {l.label}
-            </Link>
+            </a>
           ))}
         </nav>
 
         <div className="hidden lg:block">
-          <Link to="/contact" className="btn-pill">
+          <a
+            href="#contact"
+            onClick={(e) => { e.preventDefault(); scrollTo("#contact"); }}
+            className="btn-pill"
+          >
             Apply Now
-          </Link>
+          </a>
         </div>
 
         {/* Mobile toggle */}
@@ -67,18 +80,22 @@ export default function Header() {
         <div className="lg:hidden bg-background border-t border-border-light pb-4">
           <nav className="container-main flex flex-col gap-3 pt-4">
             {navLinks.map((l) => (
-              <Link
-                key={l.to}
-                to={l.to}
-                className="text-sm font-medium text-body-muted py-1"
-                onClick={() => setMobileOpen(false)}
+              <a
+                key={l.href}
+                href={l.href}
+                onClick={(e) => { e.preventDefault(); scrollTo(l.href); }}
+                className="text-sm font-medium text-body-muted py-1 cursor-pointer"
               >
                 {l.label}
-              </Link>
+              </a>
             ))}
-            <Link to="/contact" className="btn-pill w-fit mt-2" onClick={() => setMobileOpen(false)}>
+            <a
+              href="#contact"
+              onClick={(e) => { e.preventDefault(); scrollTo("#contact"); }}
+              className="btn-pill w-fit mt-2"
+            >
               Apply Now
-            </Link>
+            </a>
           </nav>
         </div>
       )}
