@@ -9,8 +9,56 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as WhyUsRouteImport } from './routes/why-us'
+import { Route as SupportRouteImport } from './routes/support'
+import { Route as SuccessStoriesRouteImport } from './routes/success-stories'
+import { Route as HowItWorksRouteImport } from './routes/how-it-works'
+import { Route as FranchiseProcessRouteImport } from './routes/franchise-process'
+import { Route as FranchiseOpportunityRouteImport } from './routes/franchise-opportunity'
+import { Route as ContactRouteImport } from './routes/contact'
+import { Route as AboutRouteImport } from './routes/about'
 import { Route as IndexRouteImport } from './routes/index'
 
+const WhyUsRoute = WhyUsRouteImport.update({
+  id: '/why-us',
+  path: '/why-us',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SupportRoute = SupportRouteImport.update({
+  id: '/support',
+  path: '/support',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SuccessStoriesRoute = SuccessStoriesRouteImport.update({
+  id: '/success-stories',
+  path: '/success-stories',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const HowItWorksRoute = HowItWorksRouteImport.update({
+  id: '/how-it-works',
+  path: '/how-it-works',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const FranchiseProcessRoute = FranchiseProcessRouteImport.update({
+  id: '/franchise-process',
+  path: '/franchise-process',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const FranchiseOpportunityRoute = FranchiseOpportunityRouteImport.update({
+  id: '/franchise-opportunity',
+  path: '/franchise-opportunity',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ContactRoute = ContactRouteImport.update({
+  id: '/contact',
+  path: '/contact',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AboutRoute = AboutRouteImport.update({
+  id: '/about',
+  path: '/about',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
@@ -19,28 +67,144 @@ const IndexRoute = IndexRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/about': typeof AboutRoute
+  '/contact': typeof ContactRoute
+  '/franchise-opportunity': typeof FranchiseOpportunityRoute
+  '/franchise-process': typeof FranchiseProcessRoute
+  '/how-it-works': typeof HowItWorksRoute
+  '/success-stories': typeof SuccessStoriesRoute
+  '/support': typeof SupportRoute
+  '/why-us': typeof WhyUsRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/about': typeof AboutRoute
+  '/contact': typeof ContactRoute
+  '/franchise-opportunity': typeof FranchiseOpportunityRoute
+  '/franchise-process': typeof FranchiseProcessRoute
+  '/how-it-works': typeof HowItWorksRoute
+  '/success-stories': typeof SuccessStoriesRoute
+  '/support': typeof SupportRoute
+  '/why-us': typeof WhyUsRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/about': typeof AboutRoute
+  '/contact': typeof ContactRoute
+  '/franchise-opportunity': typeof FranchiseOpportunityRoute
+  '/franchise-process': typeof FranchiseProcessRoute
+  '/how-it-works': typeof HowItWorksRoute
+  '/success-stories': typeof SuccessStoriesRoute
+  '/support': typeof SupportRoute
+  '/why-us': typeof WhyUsRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/about'
+    | '/contact'
+    | '/franchise-opportunity'
+    | '/franchise-process'
+    | '/how-it-works'
+    | '/success-stories'
+    | '/support'
+    | '/why-us'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to:
+    | '/'
+    | '/about'
+    | '/contact'
+    | '/franchise-opportunity'
+    | '/franchise-process'
+    | '/how-it-works'
+    | '/success-stories'
+    | '/support'
+    | '/why-us'
+  id:
+    | '__root__'
+    | '/'
+    | '/about'
+    | '/contact'
+    | '/franchise-opportunity'
+    | '/franchise-process'
+    | '/how-it-works'
+    | '/success-stories'
+    | '/support'
+    | '/why-us'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AboutRoute: typeof AboutRoute
+  ContactRoute: typeof ContactRoute
+  FranchiseOpportunityRoute: typeof FranchiseOpportunityRoute
+  FranchiseProcessRoute: typeof FranchiseProcessRoute
+  HowItWorksRoute: typeof HowItWorksRoute
+  SuccessStoriesRoute: typeof SuccessStoriesRoute
+  SupportRoute: typeof SupportRoute
+  WhyUsRoute: typeof WhyUsRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/why-us': {
+      id: '/why-us'
+      path: '/why-us'
+      fullPath: '/why-us'
+      preLoaderRoute: typeof WhyUsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/support': {
+      id: '/support'
+      path: '/support'
+      fullPath: '/support'
+      preLoaderRoute: typeof SupportRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/success-stories': {
+      id: '/success-stories'
+      path: '/success-stories'
+      fullPath: '/success-stories'
+      preLoaderRoute: typeof SuccessStoriesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/how-it-works': {
+      id: '/how-it-works'
+      path: '/how-it-works'
+      fullPath: '/how-it-works'
+      preLoaderRoute: typeof HowItWorksRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/franchise-process': {
+      id: '/franchise-process'
+      path: '/franchise-process'
+      fullPath: '/franchise-process'
+      preLoaderRoute: typeof FranchiseProcessRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/franchise-opportunity': {
+      id: '/franchise-opportunity'
+      path: '/franchise-opportunity'
+      fullPath: '/franchise-opportunity'
+      preLoaderRoute: typeof FranchiseOpportunityRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/contact': {
+      id: '/contact'
+      path: '/contact'
+      fullPath: '/contact'
+      preLoaderRoute: typeof ContactRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/about': {
+      id: '/about'
+      path: '/about'
+      fullPath: '/about'
+      preLoaderRoute: typeof AboutRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -53,17 +217,15 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AboutRoute: AboutRoute,
+  ContactRoute: ContactRoute,
+  FranchiseOpportunityRoute: FranchiseOpportunityRoute,
+  FranchiseProcessRoute: FranchiseProcessRoute,
+  HowItWorksRoute: HowItWorksRoute,
+  SuccessStoriesRoute: SuccessStoriesRoute,
+  SupportRoute: SupportRoute,
+  WhyUsRoute: WhyUsRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}
