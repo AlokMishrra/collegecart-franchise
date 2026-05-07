@@ -77,6 +77,11 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { property: "og:title", content: "CollegeCart — Campus Delivery Franchise" },
       { property: "og:description", content: "Join CollegeCart Franchise and build a profitable campus delivery business across India." },
       { property: "og:type", content: "website" },
+      { name: "twitter:title", content: "CollegeCart — Campus Delivery Franchise" },
+      { name: "twitter:description", content: "Join CollegeCart Franchise and build a profitable campus delivery business across India." },
+      { property: "og:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/ddaf86ef-0759-486f-a1f2-918ca2764215/id-preview-3c891276--54c3eee9-e8fa-4b7d-be2f-34af6098dfe6.lovable.app-1778146423466.png" },
+      { name: "twitter:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/ddaf86ef-0759-486f-a1f2-918ca2764215/id-preview-3c891276--54c3eee9-e8fa-4b7d-be2f-34af6098dfe6.lovable.app-1778146423466.png" },
+      { name: "twitter:card", content: "summary_large_image" },
     ],
     links: [
       {
