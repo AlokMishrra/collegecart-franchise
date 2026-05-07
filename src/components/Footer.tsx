@@ -1,6 +1,25 @@
-import { Link } from "@tanstack/react-router";
 import { Facebook, Instagram, Linkedin, Youtube } from "lucide-react";
 import CollegeCartLogo from "./CollegeCartLogo";
+
+function scrollTo(id: string) {
+  const el = document.getElementById(id);
+  if (el) {
+    const top = el.getBoundingClientRect().top + window.scrollY - 70;
+    window.scrollTo({ top, behavior: "smooth" });
+  }
+}
+
+function FooterLink({ href, children }: { href: string; children: React.ReactNode }) {
+  return (
+    <a
+      href={`#${href}`}
+      onClick={(e) => { e.preventDefault(); scrollTo(href); }}
+      className="hover:text-gold transition-colors cursor-pointer"
+    >
+      {children}
+    </a>
+  );
+}
 
 export default function Footer() {
   return (
@@ -19,11 +38,11 @@ export default function Footer() {
           <div>
             <h4 className="font-bold mb-4 text-sm">Quick Links</h4>
             <ul className="space-y-2 text-sm text-white/70">
-              <li><Link to="/" className="hover:text-gold transition-colors">Home</Link></li>
-              <li><Link to="/about" className="hover:text-gold transition-colors">About Us</Link></li>
-              <li><Link to="/how-it-works" className="hover:text-gold transition-colors">How It Works</Link></li>
-              <li><Link to="/franchise-opportunity" className="hover:text-gold transition-colors">Franchise Opportunity</Link></li>
-              <li><Link to="/why-us" className="hover:text-gold transition-colors">Why CollegeCart</Link></li>
+              <li><FooterLink href="home">Home</FooterLink></li>
+              <li><FooterLink href="about">About Us</FooterLink></li>
+              <li><FooterLink href="how-it-works">How It Works</FooterLink></li>
+              <li><FooterLink href="franchise-opportunity">Franchise Opportunity</FooterLink></li>
+              <li><FooterLink href="why-us">Why CollegeCart</FooterLink></li>
             </ul>
           </div>
 
@@ -31,14 +50,14 @@ export default function Footer() {
           <div>
             <h4 className="font-bold mb-4 text-sm">Franchise</h4>
             <ul className="space-y-2 text-sm text-white/70">
-              <li><Link to="/franchise-opportunity" className="hover:text-gold transition-colors">Franchise Opportunity</Link></li>
-              <li><Link to="/franchise-process" className="hover:text-gold transition-colors">Franchise Process</Link></li>
-              <li><Link to="/contact" className="hover:text-gold transition-colors">Apply Now</Link></li>
+              <li><FooterLink href="franchise-opportunity">Franchise Opportunity</FooterLink></li>
+              <li><FooterLink href="franchise-process">Franchise Process</FooterLink></li>
+              <li><FooterLink href="contact">Apply Now</FooterLink></li>
             </ul>
             <h4 className="font-bold mb-3 mt-6 text-sm">Support</h4>
             <ul className="space-y-2 text-sm text-white/70">
-              <li><Link to="/support" className="hover:text-gold transition-colors">FAQ</Link></li>
-              <li><Link to="/contact" className="hover:text-gold transition-colors">Contact Us</Link></li>
+              <li><FooterLink href="support">FAQ</FooterLink></li>
+              <li><FooterLink href="contact">Contact Us</FooterLink></li>
             </ul>
           </div>
 
