@@ -14,16 +14,153 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      brochures: {
+        Row: {
+          created_at: string
+          file_name: string
+          file_url: string
+          id: string
+          is_active: boolean
+          uploaded_by: string | null
+        }
+        Insert: {
+          created_at?: string
+          file_name: string
+          file_url: string
+          id?: string
+          is_active?: boolean
+          uploaded_by?: string | null
+        }
+        Update: {
+          created_at?: string
+          file_name?: string
+          file_url?: string
+          id?: string
+          is_active?: boolean
+          uploaded_by?: string | null
+        }
+        Relationships: []
+      }
+      franchise_applications: {
+        Row: {
+          acknowledged: boolean | null
+          campus_location: string
+          campus_photos_url: string | null
+          can_manage_daily: string | null
+          college_id_url: string | null
+          college_name: string
+          created_at: string
+          email: string
+          existing_delivery_apps: string | null
+          full_name: string
+          government_id_url: string | null
+          has_delivery_partners: string | null
+          hostel_type: string | null
+          id: string
+          launch_timeline: string | null
+          linkedin: string | null
+          num_hostels: string | null
+          outside_delivery_allowed: string | null
+          phone: string
+          starting_hostel: string | null
+          state: string
+          student_strength: string | null
+          target_students: string | null
+          team_experience: string | null
+          whatsapp: string | null
+          why_collegecart: string | null
+        }
+        Insert: {
+          acknowledged?: boolean | null
+          campus_location: string
+          campus_photos_url?: string | null
+          can_manage_daily?: string | null
+          college_id_url?: string | null
+          college_name: string
+          created_at?: string
+          email: string
+          existing_delivery_apps?: string | null
+          full_name: string
+          government_id_url?: string | null
+          has_delivery_partners?: string | null
+          hostel_type?: string | null
+          id?: string
+          launch_timeline?: string | null
+          linkedin?: string | null
+          num_hostels?: string | null
+          outside_delivery_allowed?: string | null
+          phone: string
+          starting_hostel?: string | null
+          state: string
+          student_strength?: string | null
+          target_students?: string | null
+          team_experience?: string | null
+          whatsapp?: string | null
+          why_collegecart?: string | null
+        }
+        Update: {
+          acknowledged?: boolean | null
+          campus_location?: string
+          campus_photos_url?: string | null
+          can_manage_daily?: string | null
+          college_id_url?: string | null
+          college_name?: string
+          created_at?: string
+          email?: string
+          existing_delivery_apps?: string | null
+          full_name?: string
+          government_id_url?: string | null
+          has_delivery_partners?: string | null
+          hostel_type?: string | null
+          id?: string
+          launch_timeline?: string | null
+          linkedin?: string | null
+          num_hostels?: string | null
+          outside_delivery_allowed?: string | null
+          phone?: string
+          starting_hostel?: string | null
+          state?: string
+          student_strength?: string | null
+          target_students?: string | null
+          team_experience?: string | null
+          whatsapp?: string | null
+          why_collegecart?: string | null
+        }
+        Relationships: []
+      }
+      user_roles: {
+        Row: {
+          id: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Insert: {
+          id?: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Update: {
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      has_role: {
+        Args: {
+          _role: Database["public"]["Enums"]["app_role"]
+          _user_id: string
+        }
+        Returns: boolean
+      }
     }
     Enums: {
-      [_ in never]: never
+      app_role: "admin" | "user"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -150,6 +287,8 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      app_role: ["admin", "user"],
+    },
   },
 } as const
