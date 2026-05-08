@@ -417,6 +417,7 @@ function ContactSection() {
   const [error, setError] = useState("");
   const [govIdType, setGovIdType] = useState("");
   const [currentStep, setCurrentStep] = useState(1);
+  const [fieldErrors, setFieldErrors] = useState<{[key: string]: string}>({});
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -513,27 +514,39 @@ function ContactSection() {
     const whatsapp = (form.elements.namedItem("whatsapp") as HTMLInputElement)?.value;
     const email = (form.elements.namedItem("email") as HTMLInputElement)?.value;
     
-    if (!fullName || !phone || !email) {
-      setError("Please fill all required fields marked with *");
-      return false;
+    const errors: {[key: string]: string} = {};
+
+    if (!fullName) {
+      errors.full_name = "Full name is required";
     }
 
-    // Validate phone number (Indian format: 10 digits, starting with 6-9)
-    const phoneRegex = /^[6-9]\d{9}$/;
-    if (!phoneRegex.test(phone)) {
-      setError("Please enter a valid 10-digit Indian mobile number (starting with 6, 7, 8, or 9)");
-      return false;
-    }
-
-    // Check for sequential or repeated digits
-    if (/^(\d)\1{9}$/.test(phone) || /^(0123456789|1234567890|9876543210)$/.test(phone)) {
-      setError("Please enter a valid mobile number (not sequential or repeated digits)");
-      return false;
+    if (!phone) {
+      errors.phone = "Phone number is required";
+    } else {
+      // Validate phone number (Indian format: 10 digits, starting with 6-9)
+      const phoneRegex = /^[6-9]\d{9}$/;
+      if (!phoneRegex.test(phone)) {
+        errors.phone = "Invalid number";
+      } else if (/^(\d)\1{9}$/.test(phone) || /^(0123456789|1234567890|9876543210)$/.test(phone)) {
+        errors.phone = "Invalid number";
+      }
     }
 
     // Validate WhatsApp if provided
-    if (whatsapp && !phoneRegex.test(whatsapp)) {
-      setError("Please enter a valid 10-digit WhatsApp number");
+    if (whatsapp) {
+      const phoneRegex = /^[6-9]\d{9}$/;
+      if (!phoneRegex.test(whatsapp)) {
+        errors.whatsapp = "Invalid number";
+      }
+    }
+
+    if (!email) {
+      errors.email = "Email is required";
+    }
+
+    setFieldErrors(errors);
+    
+    if (Object.keys(errors).length > 0) {
       return false;
     }
     
@@ -549,38 +562,54 @@ function ContactSection() {
     const campusLocation = (form.elements.namedItem("campus_location") as HTMLInputElement)?.value;
     const state = (form.elements.namedItem("state") as HTMLSelectElement)?.value;
     
-    if (!collegeName || !campusLocation || !state) {
-      setError("Please fill all required fields marked with *");
-      return false;
+    const errors: {[key: string]: string} = {};
+
+    if (!collegeName) {
+      errors.college_name = "College name is required";
     }
 
-    // Basic city-state validation (you can expand this with a comprehensive list)
-    const cityStateMap: { [key: string]: string[] } = {
-      "Maharashtra": ["mumbai", "pune", "nagpur", "nashik", "aurangabad", "thane", "solapur"],
-      "Delhi": ["delhi", "new delhi"],
-      "Karnataka": ["bangalore", "bengaluru", "mysore", "mangalore", "hubli"],
-      "Tamil Nadu": ["chennai", "coimbatore", "madurai", "salem", "tiruchirappalli", "trichy"],
-      "Uttar Pradesh": ["lucknow", "kanpur", "agra", "varanasi", "meerut", "allahabad", "prayagraj", "noida", "ghaziabad"],
-      "West Bengal": ["kolkata", "howrah", "durgapur", "siliguri"],
-      "Gujarat": ["ahmedabad", "surat", "vadodara", "rajkot", "bhavnagar"],
-      "Rajasthan": ["jaipur", "jodhpur", "udaipur", "kota", "ajmer"],
-      "Telangana": ["hyderabad", "warangal", "nizamabad"],
-      "Andhra Pradesh": ["visakhapatnam", "vijayawada", "guntur", "tirupati"],
-      "Kerala": ["thiruvananthapuram", "kochi", "kozhikode", "thrissur"],
-      "Madhya Pradesh": ["bhopal", "indore", "gwalior", "jabalpur"],
-      "Punjab": ["chandigarh", "ludhiana", "amritsar", "jalandhar"],
-      "Haryana": ["gurgaon", "gurugram", "faridabad", "panipat"],
-    };
+    if (!campusLocation) {
+      errors.campus_location = "Campus location is required";
+    }
 
-    const cityLower = campusLocation.toLowerCase().trim();
-    const stateCities = cityStateMap[state];
-    
-    if (stateCities) {
-      const cityFound = stateCities.some(city => cityLower.includes(city) || city.includes(cityLower));
-      if (!cityFound && campusLocation.length > 3) {
-        setError(`Please verify: "${campusLocation}" doesn't seem to be in ${state}. If correct, you can proceed.`);
-        // Don't return false - just warn, allow to proceed
+    if (!state) {
+      errors.state = "State is required";
+    }
+
+    // City-state validation
+    if (campusLocation && state) {
+      const cityStateMap: { [key: string]: string[] } = {
+        "Maharashtra": ["mumbai", "pune", "nagpur", "nashik", "aurangabad", "thane", "solapur"],
+        "Delhi": ["delhi", "new delhi"],
+        "Karnataka": ["bangalore", "bengaluru", "mysore", "mangalore", "hubli"],
+        "Tamil Nadu": ["chennai", "coimbatore", "madurai", "salem", "tiruchirappalli", "trichy"],
+        "Uttar Pradesh": ["lucknow", "kanpur", "agra", "varanasi", "meerut", "allahabad", "prayagraj", "noida", "ghaziabad"],
+        "West Bengal": ["kolkata", "howrah", "durgapur", "siliguri"],
+        "Gujarat": ["ahmedabad", "surat", "vadodara", "rajkot", "bhavnagar"],
+        "Rajasthan": ["jaipur", "jodhpur", "udaipur", "kota", "ajmer"],
+        "Telangana": ["hyderabad", "warangal", "nizamabad"],
+        "Andhra Pradesh": ["visakhapatnam", "vijayawada", "guntur", "tirupati"],
+        "Kerala": ["thiruvananthapuram", "kochi", "kozhikode", "thrissur"],
+        "Madhya Pradesh": ["bhopal", "indore", "gwalior", "jabalpur"],
+        "Punjab": ["chandigarh", "ludhiana", "amritsar", "jalandhar"],
+        "Haryana": ["gurgaon", "gurugram", "faridabad", "panipat"],
+      };
+
+      const cityLower = campusLocation.toLowerCase().trim();
+      const stateCities = cityStateMap[state];
+      
+      if (stateCities && campusLocation.length > 3) {
+        const cityFound = stateCities.some(city => cityLower.includes(city) || city.includes(cityLower));
+        if (!cityFound) {
+          errors.campus_location = `Verify: "${campusLocation}" may not be in ${state}`;
+        }
       }
+    }
+
+    setFieldErrors(errors);
+    
+    if (Object.keys(errors).length > 0) {
+      return false;
     }
     
     setError("");
@@ -689,37 +718,60 @@ function ContactSection() {
                     handleSubmit(e);
                   }
                 }}>
-                  {error && (
-                    <div className="text-destructive text-sm bg-destructive/10 p-3 rounded-lg border border-destructive/20">
-                      <p className="font-semibold">⚠️ {error}</p>
-                    </div>
-                  )}
+                  {/* Removed general error banner - errors now show inline per field */}
 
                   {/* Step 1: Personal Information */}
                   <div className="space-y-4" style={{ display: currentStep === 1 ? 'block' : 'none' }}>
                     <h4 className="font-bold text-navy text-sm mb-3 border-b border-border-light pb-2">Personal Information</h4>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      <input name="full_name" placeholder="Full Name *" required={currentStep === 1} className={inputClass} />
-                      <input 
-                        name="phone" 
-                        type="tel" 
-                        placeholder="Phone Number *" 
-                        required={currentStep === 1} 
-                        pattern="[6-9][0-9]{9}"
-                        maxLength={10}
-                        title="Enter a valid 10-digit Indian mobile number starting with 6, 7, 8, or 9"
-                        className={inputClass} 
-                      />
-                      <input 
-                        name="whatsapp" 
-                        type="tel" 
-                        placeholder="WhatsApp Number" 
-                        pattern="[6-9][0-9]{9}"
-                        maxLength={10}
-                        title="Enter a valid 10-digit mobile number"
-                        className={inputClass} 
-                      />
-                      <input name="email" type="email" placeholder="Email Address *" required={currentStep === 1} className={inputClass} />
+                      <div>
+                        <input 
+                          name="full_name" 
+                          placeholder="Full Name *" 
+                          required={currentStep === 1} 
+                          className={`${inputClass} ${fieldErrors.full_name ? 'border-red-500' : ''}`}
+                          onChange={() => setFieldErrors(prev => ({...prev, full_name: ''}))}
+                        />
+                        {fieldErrors.full_name && <p className="text-red-500 text-xs mt-1">{fieldErrors.full_name}</p>}
+                      </div>
+                      <div>
+                        <input 
+                          name="phone" 
+                          type="tel" 
+                          placeholder="Phone Number *" 
+                          required={currentStep === 1} 
+                          pattern="[6-9][0-9]{9}"
+                          maxLength={10}
+                          title="Enter a valid 10-digit Indian mobile number starting with 6, 7, 8, or 9"
+                          className={`${inputClass} ${fieldErrors.phone ? 'border-red-500' : ''}`}
+                          onChange={() => setFieldErrors(prev => ({...prev, phone: ''}))}
+                        />
+                        {fieldErrors.phone && <p className="text-red-500 text-xs mt-1">{fieldErrors.phone}</p>}
+                      </div>
+                      <div>
+                        <input 
+                          name="whatsapp" 
+                          type="tel" 
+                          placeholder="WhatsApp Number" 
+                          pattern="[6-9][0-9]{9}"
+                          maxLength={10}
+                          title="Enter a valid 10-digit mobile number"
+                          className={`${inputClass} ${fieldErrors.whatsapp ? 'border-red-500' : ''}`}
+                          onChange={() => setFieldErrors(prev => ({...prev, whatsapp: ''}))}
+                        />
+                        {fieldErrors.whatsapp && <p className="text-red-500 text-xs mt-1">{fieldErrors.whatsapp}</p>}
+                      </div>
+                      <div>
+                        <input 
+                          name="email" 
+                          type="email" 
+                          placeholder="Email Address *" 
+                          required={currentStep === 1} 
+                          className={`${inputClass} ${fieldErrors.email ? 'border-red-500' : ''}`}
+                          onChange={() => setFieldErrors(prev => ({...prev, email: ''}))}
+                        />
+                        {fieldErrors.email && <p className="text-red-500 text-xs mt-1">{fieldErrors.email}</p>}
+                      </div>
                     </div>
                     <input name="linkedin" placeholder="LinkedIn Profile (Optional)" className={inputClass} />
                     
@@ -736,12 +788,38 @@ function ContactSection() {
                   <div className="space-y-4" style={{ display: currentStep === 2 ? 'block' : 'none' }}>
                     <h4 className="font-bold text-navy text-sm mb-3 border-b border-border-light pb-2">College Details</h4>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      <input name="college_name" placeholder="College/University Name *" required={currentStep === 2} className={inputClass} />
-                      <input name="campus_location" placeholder="Campus Location *" required={currentStep === 2} className={inputClass} />
-                      <select name="state" required={currentStep === 2} className={`${inputClass} text-body-muted`}>
-                        <option value="">Select State *</option>
-                        {indianStates.map((s) => <option key={s} value={s}>{s}</option>)}
-                      </select>
+                      <div>
+                        <input 
+                          name="college_name" 
+                          placeholder="College/University Name *" 
+                          required={currentStep === 2} 
+                          className={`${inputClass} ${fieldErrors.college_name ? 'border-red-500' : ''}`}
+                          onChange={() => setFieldErrors(prev => ({...prev, college_name: ''}))}
+                        />
+                        {fieldErrors.college_name && <p className="text-red-500 text-xs mt-1">{fieldErrors.college_name}</p>}
+                      </div>
+                      <div>
+                        <input 
+                          name="campus_location" 
+                          placeholder="Campus Location *" 
+                          required={currentStep === 2} 
+                          className={`${inputClass} ${fieldErrors.campus_location ? 'border-red-500' : ''}`}
+                          onChange={() => setFieldErrors(prev => ({...prev, campus_location: ''}))}
+                        />
+                        {fieldErrors.campus_location && <p className="text-red-500 text-xs mt-1">{fieldErrors.campus_location}</p>}
+                      </div>
+                      <div>
+                        <select 
+                          name="state" 
+                          required={currentStep === 2} 
+                          className={`${inputClass} text-body-muted ${fieldErrors.state ? 'border-red-500' : ''}`}
+                          onChange={() => setFieldErrors(prev => ({...prev, state: ''}))}
+                        >
+                          <option value="">Select State *</option>
+                          {indianStates.map((s) => <option key={s} value={s}>{s}</option>)}
+                        </select>
+                        {fieldErrors.state && <p className="text-red-500 text-xs mt-1">{fieldErrors.state}</p>}
+                      </div>
                       <input name="num_hostels" placeholder="Number of Hostels" className={inputClass} />
                       <input name="student_strength" placeholder="Approx Student Strength" className={inputClass} />
                       <select name="hostel_type" className={`${inputClass} text-body-muted`}>
