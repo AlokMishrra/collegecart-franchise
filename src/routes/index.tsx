@@ -426,6 +426,13 @@ function ContactSection() {
     const form = e.currentTarget;
     const fd = new FormData(form);
 
+    // Optimistic UI - show success immediately for better UX
+    // The actual submission happens in background
+    setTimeout(() => {
+      setSubmitted(true);
+      setSubmitting(false);
+    }, 500); // Show success after 500ms for smooth transition
+
     try {
       // Upload files
       let collegeIdUrl = "";
@@ -482,14 +489,18 @@ function ContactSection() {
 
       if (insertError) {
         console.error("Supabase insert error:", insertError);
-        throw new Error(insertError.message || "Failed to submit application");
+        // If there's an error, revert the optimistic UI
+        setSubmitted(false);
+        setSubmitting(false);
+        setError(insertError.message || "Failed to submit application. Please try again.");
       }
-      setSubmitted(true);
+      // Success case is already handled by optimistic UI above
     } catch (err: any) {
       console.error("Form submission error:", err);
-      setError(err.message || "Something went wrong. Please try again.");
-    } finally {
+      // Revert optimistic UI on error
+      setSubmitted(false);
       setSubmitting(false);
+      setError(err.message || "Something went wrong. Please try again.");
     }
   };
 
@@ -499,10 +510,30 @@ function ContactSection() {
     
     const fullName = (form.elements.namedItem("full_name") as HTMLInputElement)?.value;
     const phone = (form.elements.namedItem("phone") as HTMLInputElement)?.value;
+    const whatsapp = (form.elements.namedItem("whatsapp") as HTMLInputElement)?.value;
     const email = (form.elements.namedItem("email") as HTMLInputElement)?.value;
     
     if (!fullName || !phone || !email) {
       setError("Please fill all required fields marked with *");
+      return false;
+    }
+
+    // Validate phone number (Indian format: 10 digits, starting with 6-9)
+    const phoneRegex = /^[6-9]\d{9}$/;
+    if (!phoneRegex.test(phone)) {
+      setError("Please enter a valid 10-digit Indian mobile number (starting with 6, 7, 8, or 9)");
+      return false;
+    }
+
+    // Check for sequential or repeated digits
+    if (/^(\d)\1{9}$/.test(phone) || /^(0123456789|1234567890|9876543210)$/.test(phone)) {
+      setError("Please enter a valid mobile number (not sequential or repeated digits)");
+      return false;
+    }
+
+    // Validate WhatsApp if provided
+    if (whatsapp && !phoneRegex.test(whatsapp)) {
+      setError("Please enter a valid 10-digit WhatsApp number");
       return false;
     }
     
@@ -521,6 +552,35 @@ function ContactSection() {
     if (!collegeName || !campusLocation || !state) {
       setError("Please fill all required fields marked with *");
       return false;
+    }
+
+    // Basic city-state validation (you can expand this with a comprehensive list)
+    const cityStateMap: { [key: string]: string[] } = {
+      "Maharashtra": ["mumbai", "pune", "nagpur", "nashik", "aurangabad", "thane", "solapur"],
+      "Delhi": ["delhi", "new delhi"],
+      "Karnataka": ["bangalore", "bengaluru", "mysore", "mangalore", "hubli"],
+      "Tamil Nadu": ["chennai", "coimbatore", "madurai", "salem", "tiruchirappalli", "trichy"],
+      "Uttar Pradesh": ["lucknow", "kanpur", "agra", "varanasi", "meerut", "allahabad", "prayagraj", "noida", "ghaziabad"],
+      "West Bengal": ["kolkata", "howrah", "durgapur", "siliguri"],
+      "Gujarat": ["ahmedabad", "surat", "vadodara", "rajkot", "bhavnagar"],
+      "Rajasthan": ["jaipur", "jodhpur", "udaipur", "kota", "ajmer"],
+      "Telangana": ["hyderabad", "warangal", "nizamabad"],
+      "Andhra Pradesh": ["visakhapatnam", "vijayawada", "guntur", "tirupati"],
+      "Kerala": ["thiruvananthapuram", "kochi", "kozhikode", "thrissur"],
+      "Madhya Pradesh": ["bhopal", "indore", "gwalior", "jabalpur"],
+      "Punjab": ["chandigarh", "ludhiana", "amritsar", "jalandhar"],
+      "Haryana": ["gurgaon", "gurugram", "faridabad", "panipat"],
+    };
+
+    const cityLower = campusLocation.toLowerCase().trim();
+    const stateCities = cityStateMap[state];
+    
+    if (stateCities) {
+      const cityFound = stateCities.some(city => cityLower.includes(city) || city.includes(cityLower));
+      if (!cityFound && campusLocation.length > 3) {
+        setError(`Please verify: "${campusLocation}" doesn't seem to be in ${state}. If correct, you can proceed.`);
+        // Don't return false - just warn, allow to proceed
+      }
     }
     
     setError("");
@@ -640,8 +700,25 @@ function ContactSection() {
                     <h4 className="font-bold text-navy text-sm mb-3 border-b border-border-light pb-2">Personal Information</h4>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       <input name="full_name" placeholder="Full Name *" required={currentStep === 1} className={inputClass} />
-                      <input name="phone" type="tel" placeholder="Phone Number *" required={currentStep === 1} className={inputClass} />
-                      <input name="whatsapp" type="tel" placeholder="WhatsApp Number" className={inputClass} />
+                      <input 
+                        name="phone" 
+                        type="tel" 
+                        placeholder="Phone Number *" 
+                        required={currentStep === 1} 
+                        pattern="[6-9][0-9]{9}"
+                        maxLength={10}
+                        title="Enter a valid 10-digit Indian mobile number starting with 6, 7, 8, or 9"
+                        className={inputClass} 
+                      />
+                      <input 
+                        name="whatsapp" 
+                        type="tel" 
+                        placeholder="WhatsApp Number" 
+                        pattern="[6-9][0-9]{9}"
+                        maxLength={10}
+                        title="Enter a valid 10-digit mobile number"
+                        className={inputClass} 
+                      />
                       <input name="email" type="email" placeholder="Email Address *" required={currentStep === 1} className={inputClass} />
                     </div>
                     <input name="linkedin" placeholder="LinkedIn Profile (Optional)" className={inputClass} />
