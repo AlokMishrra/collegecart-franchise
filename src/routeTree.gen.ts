@@ -19,6 +19,7 @@ import { Route as ContactRouteImport } from './routes/contact'
 import { Route as AboutRouteImport } from './routes/about'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AdminIndexRouteImport } from './routes/admin/index'
+import { Route as ApiSetupRouteImport } from './routes/api/setup'
 import { Route as AdminDashboardRouteImport } from './routes/admin/dashboard'
 
 const WhyUsRoute = WhyUsRouteImport.update({
@@ -71,6 +72,11 @@ const AdminIndexRoute = AdminIndexRouteImport.update({
   path: '/admin/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiSetupRoute = ApiSetupRouteImport.update({
+  id: '/api/setup',
+  path: '/api/setup',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AdminDashboardRoute = AdminDashboardRouteImport.update({
   id: '/admin/dashboard',
   path: '/admin/dashboard',
@@ -88,6 +94,7 @@ export interface FileRoutesByFullPath {
   '/support': typeof SupportRoute
   '/why-us': typeof WhyUsRoute
   '/admin/dashboard': typeof AdminDashboardRoute
+  '/api/setup': typeof ApiSetupRoute
   '/admin/': typeof AdminIndexRoute
 }
 export interface FileRoutesByTo {
@@ -101,6 +108,7 @@ export interface FileRoutesByTo {
   '/support': typeof SupportRoute
   '/why-us': typeof WhyUsRoute
   '/admin/dashboard': typeof AdminDashboardRoute
+  '/api/setup': typeof ApiSetupRoute
   '/admin': typeof AdminIndexRoute
 }
 export interface FileRoutesById {
@@ -115,6 +123,7 @@ export interface FileRoutesById {
   '/support': typeof SupportRoute
   '/why-us': typeof WhyUsRoute
   '/admin/dashboard': typeof AdminDashboardRoute
+  '/api/setup': typeof ApiSetupRoute
   '/admin/': typeof AdminIndexRoute
 }
 export interface FileRouteTypes {
@@ -130,6 +139,7 @@ export interface FileRouteTypes {
     | '/support'
     | '/why-us'
     | '/admin/dashboard'
+    | '/api/setup'
     | '/admin/'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -143,6 +153,7 @@ export interface FileRouteTypes {
     | '/support'
     | '/why-us'
     | '/admin/dashboard'
+    | '/api/setup'
     | '/admin'
   id:
     | '__root__'
@@ -156,6 +167,7 @@ export interface FileRouteTypes {
     | '/support'
     | '/why-us'
     | '/admin/dashboard'
+    | '/api/setup'
     | '/admin/'
   fileRoutesById: FileRoutesById
 }
@@ -170,6 +182,7 @@ export interface RootRouteChildren {
   SupportRoute: typeof SupportRoute
   WhyUsRoute: typeof WhyUsRoute
   AdminDashboardRoute: typeof AdminDashboardRoute
+  ApiSetupRoute: typeof ApiSetupRoute
   AdminIndexRoute: typeof AdminIndexRoute
 }
 
@@ -245,6 +258,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/setup': {
+      id: '/api/setup'
+      path: '/api/setup'
+      fullPath: '/api/setup'
+      preLoaderRoute: typeof ApiSetupRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/admin/dashboard': {
       id: '/admin/dashboard'
       path: '/admin/dashboard'
@@ -266,8 +286,19 @@ const rootRouteChildren: RootRouteChildren = {
   SupportRoute: SupportRoute,
   WhyUsRoute: WhyUsRoute,
   AdminDashboardRoute: AdminDashboardRoute,
+  ApiSetupRoute: ApiSetupRoute,
   AdminIndexRoute: AdminIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
