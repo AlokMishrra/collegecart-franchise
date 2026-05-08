@@ -13,6 +13,8 @@ import HowItWorksPage from './routes/how-it-works';
 import SupportPage from './routes/support';
 import SuccessStoriesPage from './routes/success-stories';
 import WhyUsPage from './routes/why-us';
+import AdminLogin from './routes/admin/index';
+import AdminDashboard from './routes/admin/dashboard';
 
 const root = ReactDOM.createRoot(document.getElementById('root')!);
 
@@ -29,6 +31,8 @@ root.render(
         <Route path="/support" element={<SupportPage />} />
         <Route path="/success-stories" element={<SuccessStoriesPage />} />
         <Route path="/why-us" element={<WhyUsPage />} />
+        <Route path="/admin" element={<AdminLogin />} />
+        <Route path="/admin/dashboard" element={<AdminDashboard />} />
       </Routes>
     </BrowserRouter>
   </React.StrictMode>

@@ -1,14 +1,10 @@
-import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useState, useEffect, useCallback } from "react";
+import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { getApplications, getBrochures, addBrochure, seedAdmin } from "@/lib/admin.functions";
 import {
   LogOut, Upload, FileText, Users, Eye, ChevronDown, ChevronUp, RefreshCw,
 } from "lucide-react";
-
-export const Route = createFileRoute("/admin/dashboard")({
-  component: AdminDashboard,
-});
 
 type Application = {
   id: string;
@@ -59,13 +55,13 @@ function AdminDashboard() {
 
   const checkAuth = useCallback(async () => {
     const { data: { user } } = await supabase.auth.getUser();
-    if (!user) { navigate({ to: "/admin" }); return; }
+    if (!user) { navigate("/admin"); return; }
     setUserId(user.id);
 
     const { data: roles } = await supabase.from("user_roles").select("role").eq("user_id", user.id);
     if (!roles?.some((r) => r.role === "admin")) {
       await supabase.auth.signOut();
-      navigate({ to: "/admin" });
+      navigate("/admin");
     }
   }, [navigate]);
 
@@ -89,7 +85,7 @@ function AdminDashboard() {
 
   const handleLogout = async () => {
     await supabase.auth.signOut();
-    navigate({ to: "/admin" });
+    navigate("/admin");
   };
 
   const handleUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -103,7 +99,7 @@ function AdminDashboard() {
 
     const { data: urlData } = supabase.storage.from("brochures").getPublicUrl(fileName);
 
-    await addBrochure({ data: { file_name: file.name, file_url: urlData.publicUrl, uploaded_by: userId } });
+    await addBrochure({ file_name: file.name, file_url: urlData.publicUrl, uploaded_by: userId });
     await loadData();
     setUploading(false);
   };
@@ -252,3 +248,6 @@ function Field({ label, value }: { label: string; value: React.ReactNode }) {
     </div>
   );
 }
+
+// Export for standard React Router
+export default AdminDashboard;

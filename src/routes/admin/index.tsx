@@ -1,11 +1,7 @@
-import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { LogIn, Eye, EyeOff } from "lucide-react";
-
-export const Route = createFileRoute("/admin/")({
-  component: AdminLogin,
-});
 
 function AdminLogin() {
   const [email, setEmail] = useState("");
@@ -17,7 +13,7 @@ function AdminLogin() {
 
   useEffect(() => {
     supabase.auth.getUser().then(({ data }) => {
-      if (data.user) navigate({ to: "/admin/dashboard" });
+      if (data.user) navigate("/admin/dashboard");
     });
   }, [navigate]);
 
@@ -47,7 +43,7 @@ function AdminLogin() {
       return;
     }
 
-    navigate({ to: "/admin/dashboard" });
+    navigate("/admin/dashboard");
   };
 
   return (
@@ -91,3 +87,6 @@ function AdminLogin() {
     </div>
   );
 }
+
+// Export for standard React Router
+export default AdminLogin;
