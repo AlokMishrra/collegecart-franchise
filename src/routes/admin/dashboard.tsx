@@ -176,29 +176,99 @@ function AdminDashboard() {
                   {expandedApp === app.id ? <ChevronUp size={18} className="text-body-muted" /> : <ChevronDown size={18} className="text-body-muted" />}
                 </button>
                 {expandedApp === app.id && (
-                  <div className="px-4 pb-4 border-t border-border-light pt-4 grid grid-cols-1 md:grid-cols-2 gap-3 text-sm">
-                    <Field label="Phone" value={app.phone} />
-                    <Field label="WhatsApp" value={app.whatsapp} />
-                    <Field label="Email" value={app.email} />
-                    <Field label="LinkedIn" value={app.linkedin} />
-                    <Field label="College" value={app.college_name} />
-                    <Field label="Location" value={app.campus_location} />
-                    <Field label="State" value={app.state} />
-                    <Field label="Hostels" value={app.num_hostels} />
-                    <Field label="Student Strength" value={app.student_strength} />
-                    <Field label="Hostel Type" value={app.hostel_type} />
-                    <Field label="Why CollegeCart?" value={app.why_collegecart} />
-                    <Field label="Team Experience" value={app.team_experience} />
-                    <Field label="Has Delivery Partners" value={app.has_delivery_partners} />
-                    <Field label="Starting Hostel" value={app.starting_hostel} />
-                    <Field label="Target Students" value={app.target_students} />
-                    <Field label="Outside Delivery Allowed" value={app.outside_delivery_allowed} />
-                    <Field label="Existing Delivery Apps" value={app.existing_delivery_apps} />
-                    <Field label="Launch Timeline" value={app.launch_timeline} />
-                    <Field label="Can Manage Daily" value={app.can_manage_daily} />
-                    {app.college_id_url && <Field label="College ID" value={<a href={app.college_id_url} target="_blank" rel="noreferrer" className="text-gold underline">View</a>} />}
-                    {app.government_id_url && <Field label="Government ID" value={<a href={app.government_id_url} target="_blank" rel="noreferrer" className="text-gold underline">View</a>} />}
-                    {app.campus_photos_url && <Field label="Campus Photos" value={<a href={app.campus_photos_url} target="_blank" rel="noreferrer" className="text-gold underline">View</a>} />}
+                  <div className="px-4 pb-4 border-t border-border-light pt-4 space-y-6 text-sm">
+                    {/* Personal Information Section */}
+                    <div>
+                      <h5 className="font-bold text-navy mb-3 pb-2 border-b border-border-light">Personal Information</h5>
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                        <Field label="Full Name" value={app.full_name} />
+                        <Field label="Phone" value={app.phone} />
+                        <Field label="WhatsApp" value={app.whatsapp || "Not provided"} />
+                        <Field label="Email" value={app.email} />
+                        <Field label="LinkedIn" value={app.linkedin || "Not provided"} />
+                      </div>
+                    </div>
+
+                    {/* College Details Section */}
+                    <div>
+                      <h5 className="font-bold text-navy mb-3 pb-2 border-b border-border-light">College Details</h5>
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                        <Field label="College Name" value={app.college_name} />
+                        <Field label="Campus Location" value={app.campus_location} />
+                        <Field label="State" value={app.state} />
+                        <Field label="Number of Hostels" value={app.num_hostels || "Not provided"} />
+                        <Field label="Student Strength" value={app.student_strength || "Not provided"} />
+                        <Field label="Hostel Type" value={app.hostel_type || "Not provided"} />
+                      </div>
+                    </div>
+
+                    {/* Business & Operational Details Section */}
+                    <div>
+                      <h5 className="font-bold text-navy mb-3 pb-2 border-b border-border-light">Business & Operational Details</h5>
+                      <div className="grid grid-cols-1 gap-3">
+                        <Field label="Why CollegeCart?" value={app.why_collegecart || "Not provided"} />
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                          <Field label="Starting Hostel" value={app.starting_hostel || "Not provided"} />
+                          <Field label="Target Students" value={app.target_students || "Not provided"} />
+                          <Field label="Team Experience" value={app.team_experience || "Not provided"} />
+                          <Field label="Has Delivery Partners" value={app.has_delivery_partners || "Not provided"} />
+                          <Field label="Outside Delivery Allowed" value={app.outside_delivery_allowed || "Not provided"} />
+                          <Field label="Existing Delivery Apps" value={app.existing_delivery_apps || "Not provided"} />
+                          <Field label="Launch Timeline" value={app.launch_timeline || "Not provided"} />
+                          <Field label="Can Manage Daily" value={app.can_manage_daily || "Not provided"} />
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Documents Section */}
+                    <div>
+                      <h5 className="font-bold text-navy mb-3 pb-2 border-b border-border-light">Documents</h5>
+                      <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+                        <div>
+                          <p className="text-body-muted text-xs mb-1">College ID</p>
+                          {app.college_id_url ? (
+                            <a href={app.college_id_url} target="_blank" rel="noreferrer" className="text-gold underline font-medium inline-flex items-center gap-1">
+                              <Eye size={14} /> View Document
+                            </a>
+                          ) : (
+                            <p className="text-body-muted text-sm">Not uploaded</p>
+                          )}
+                        </div>
+                        <div>
+                          <p className="text-body-muted text-xs mb-1">Government ID</p>
+                          {app.government_id_url ? (
+                            <a href={app.government_id_url} target="_blank" rel="noreferrer" className="text-gold underline font-medium inline-flex items-center gap-1">
+                              <Eye size={14} /> View Document
+                            </a>
+                          ) : (
+                            <p className="text-body-muted text-sm">Not uploaded</p>
+                          )}
+                        </div>
+                        <div>
+                          <p className="text-body-muted text-xs mb-1">Campus Photos</p>
+                          {app.campus_photos_url ? (
+                            <a href={app.campus_photos_url} target="_blank" rel="noreferrer" className="text-gold underline font-medium inline-flex items-center gap-1">
+                              <Eye size={14} /> View Photos
+                            </a>
+                          ) : (
+                            <p className="text-body-muted text-sm">Not uploaded</p>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Acknowledgement Status */}
+                    <div>
+                      <h5 className="font-bold text-navy mb-3 pb-2 border-b border-border-light">Status</h5>
+                      <div className="flex items-center gap-2">
+                        <span className={`px-3 py-1 rounded-full text-xs font-bold ${app.acknowledged ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-700'}`}>
+                          {app.acknowledged ? '✓ Terms Acknowledged' : 'Terms Not Acknowledged'}
+                        </span>
+                        <span className="text-xs text-body-muted">
+                          Submitted: {new Date(app.created_at).toLocaleString()}
+                        </span>
+                      </div>
+                    </div>
                   </div>
                 )}
               </div>
@@ -240,11 +310,10 @@ function AdminDashboard() {
 }
 
 function Field({ label, value }: { label: string; value: React.ReactNode }) {
-  if (!value) return null;
   return (
     <div>
-      <p className="text-body-muted text-xs">{label}</p>
-      <p className="text-navy font-medium">{typeof value === "string" ? value : value}</p>
+      <p className="text-body-muted text-xs mb-1">{label}</p>
+      <p className="text-navy font-medium">{typeof value === "string" ? (value || "Not provided") : value}</p>
     </div>
   );
 }
