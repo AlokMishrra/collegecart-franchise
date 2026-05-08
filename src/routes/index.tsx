@@ -426,16 +426,16 @@ function ContactSection() {
     const form = e.currentTarget;
     const fd = new FormData(form);
 
-    // Upload files
-    let collegeIdUrl = "";
-    let govIdUrl = "";
-    let campusPhotosUrl = "";
-
-    const collegeId = (form.elements.namedItem("college_id") as HTMLInputElement)?.files?.[0];
-    const govId = (form.elements.namedItem("government_id") as HTMLInputElement)?.files?.[0];
-    const campusPhotos = (form.elements.namedItem("campus_photos") as HTMLInputElement)?.files?.[0];
-
     try {
+      // Upload files
+      let collegeIdUrl = "";
+      let govIdUrl = "";
+      let campusPhotosUrl = "";
+
+      const collegeId = (form.elements.namedItem("college_id") as HTMLInputElement)?.files?.[0];
+      const govId = (form.elements.namedItem("government_id") as HTMLInputElement)?.files?.[0];
+      const campusPhotos = (form.elements.namedItem("campus_photos") as HTMLInputElement)?.files?.[0];
+
       if (collegeId) {
         const name = `${Date.now()}-college-${collegeId.name}`;
         await supabase.storage.from("application-uploads").upload(name, collegeId);
@@ -473,18 +473,24 @@ function ContactSection() {
         existing_delivery_apps: fd.get("existing_delivery_apps") as string || null,
         launch_timeline: fd.get("launch_timeline") as string || null,
         can_manage_daily: fd.get("can_manage_daily") as string || null,
+        government_id_type: govIdType || null,
         college_id_url: collegeIdUrl || null,
         government_id_url: govIdUrl || null,
         campus_photos_url: campusPhotosUrl || null,
         acknowledged: fd.get("acknowledged") === "on",
       });
 
-      if (insertError) throw insertError;
+      if (insertError) {
+        console.error("Supabase insert error:", insertError);
+        throw new Error(insertError.message || "Failed to submit application");
+      }
       setSubmitted(true);
     } catch (err: any) {
-      setError(err.message || "Something went wrong");
+      console.error("Form submission error:", err);
+      setError(err.message || "Something went wrong. Please try again.");
+    } finally {
+      setSubmitting(false);
     }
-    setSubmitting(false);
   };
 
   const validateStep1 = () => {
