@@ -4,7 +4,7 @@
   "installCommand": "npm install",
   "rewrites": [
     {
-      "source": "/((?!favicon\\.ico|assets|_routes\\.json).*)",
+      "source": "/((?!favicon\\.(ico|svg)|assets|_routes\\.json).*)",
       "destination": "/index.html"
     }
   ]
