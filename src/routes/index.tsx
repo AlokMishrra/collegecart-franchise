@@ -86,8 +86,8 @@ function HeroSection() {
 
 /* ─── Stats Bar ─── */
 const heroStats = [
-  { icon: ShoppingBag, title: "25+", sub: "Active Campuses" },
-  { icon: Users, title: "5+", sub: "Students Served" },
+  { icon: ShoppingBag, title: "5+", sub: "Active Campuses" },
+  { icon: Users, title: "5000+", sub: "Students Served" },
   { icon: Truck, title: "300+", sub: "Campus Delivery Partners" },
   { icon: Star, title: "4.8★", sub: "Student Satisfaction Rating" },
 ];
@@ -96,14 +96,14 @@ function StatsBar() {
   const ref = useScrollReveal();
   return (
     <section ref={ref} className="bg-navy fade-in-up">
-      <div className="container-main py-6">
-        <p className="text-center text-white/60 text-xs uppercase tracking-widest mb-4">Campus Business Built For Students</p>
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-6">
+      <div className="container-main py-8">
+        <p className="text-center text-white/60 text-xs uppercase tracking-widest mb-6">Campus Business Built For Students</p>
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-8">
           {heroStats.map((s) => (
             <div key={s.sub} className="flex flex-col items-center text-navy-foreground text-center">
-              <s.icon size={28} className="text-gold mb-1" />
-              <p className="font-extrabold text-xl">{s.title}</p>
-              <p className="text-xs text-white/70">{s.sub}</p>
+              <s.icon size={32} className="text-gold mb-2" />
+              <p className="font-extrabold text-2xl lg:text-3xl mb-1">{s.title}</p>
+              <p className="text-xs lg:text-sm text-white/70 leading-tight">{s.sub}</p>
             </div>
           ))}
         </div>
@@ -391,7 +391,7 @@ function FinalCTASection() {
         </p>
         <div className="flex flex-wrap gap-4 justify-center">
           <a href="#contact" onClick={(e) => { e.preventDefault(); document.getElementById("contact")?.scrollIntoView({ behavior: "smooth" }); }} className="btn-primary">Apply Now</a>
-          <a href="tel:+917248316506" className="btn-secondary !border-white !text-white hover:!bg-white/10">Talk To Our Team</a>
+          <a href="tel:+917248316506" className="btn-secondary !border-white !text-navy hover:!bg-white/90">Talk To Our Team</a>
         </div>
       </div>
     </section>
@@ -412,6 +412,8 @@ function ContactSection() {
   const [submitted, setSubmitted] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState("");
+  const [govIdType, setGovIdType] = useState("");
+  const [currentStep, setCurrentStep] = useState(1);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -482,6 +484,77 @@ function ContactSection() {
     setSubmitting(false);
   };
 
+  const validateStep1 = () => {
+    const form = document.querySelector('form') as HTMLFormElement;
+    if (!form) return false;
+    
+    const fullName = (form.elements.namedItem("full_name") as HTMLInputElement)?.value;
+    const phone = (form.elements.namedItem("phone") as HTMLInputElement)?.value;
+    const email = (form.elements.namedItem("email") as HTMLInputElement)?.value;
+    
+    if (!fullName || !phone || !email) {
+      setError("Please fill all required fields marked with *");
+      return false;
+    }
+    
+    setError("");
+    return true;
+  };
+
+  const validateStep2 = () => {
+    const form = document.querySelector('form') as HTMLFormElement;
+    if (!form) return false;
+    
+    const collegeName = (form.elements.namedItem("college_name") as HTMLInputElement)?.value;
+    const campusLocation = (form.elements.namedItem("campus_location") as HTMLInputElement)?.value;
+    const state = (form.elements.namedItem("state") as HTMLSelectElement)?.value;
+    
+    if (!collegeName || !campusLocation || !state) {
+      setError("Please fill all required fields marked with *");
+      return false;
+    }
+    
+    setError("");
+    return true;
+  };
+
+  const validateStep3 = () => {
+    const form = document.querySelector('form') as HTMLFormElement;
+    if (!form) return false;
+    
+    const teamExperience = (form.elements.namedItem("team_experience") as HTMLSelectElement)?.value;
+    const hasDeliveryPartners = (form.elements.namedItem("has_delivery_partners") as HTMLSelectElement)?.value;
+    const outsideDelivery = (form.elements.namedItem("outside_delivery_allowed") as HTMLSelectElement)?.value;
+    const existingApps = (form.elements.namedItem("existing_delivery_apps") as HTMLSelectElement)?.value;
+    const launchTimeline = (form.elements.namedItem("launch_timeline") as HTMLSelectElement)?.value;
+    const canManageDaily = (form.elements.namedItem("can_manage_daily") as HTMLSelectElement)?.value;
+    const acknowledged = (form.elements.namedItem("acknowledged") as HTMLInputElement)?.checked;
+    
+    if (!teamExperience || !hasDeliveryPartners || !outsideDelivery || !existingApps || !launchTimeline || !canManageDaily) {
+      setError("Please answer all questions before submitting");
+      return false;
+    }
+    
+    if (!acknowledged) {
+      setError("Please acknowledge the partnership terms");
+      return false;
+    }
+    
+    setError("");
+    return true;
+  };
+
+  const handleNextStep = (nextStep: number) => {
+    if (nextStep === 2 && !validateStep1()) {
+      return;
+    }
+    if (nextStep === 3 && !validateStep2()) {
+      return;
+    }
+    setCurrentStep(nextStep);
+    window.scrollTo({ top: document.getElementById("contact")?.offsetTop || 0, behavior: "smooth" });
+  };
+
   const inputClass = "w-full px-4 py-3 rounded-lg border border-border-light text-sm focus:outline-none focus:border-gold transition-colors";
 
   return (
@@ -510,6 +583,30 @@ function ContactSection() {
           <div className="lg:w-[60%]">
             <div className="card-base">
               <h3 className="font-bold text-navy text-xl mb-6">Apply For Campus Franchise</h3>
+              
+              {/* Step Indicator */}
+              {!submitted && (
+                <div className="mb-8">
+                  <div className="flex items-center justify-between">
+                    {[1, 2, 3].map((step) => (
+                      <div key={step} className="flex items-center flex-1">
+                        <div className="flex flex-col items-center flex-1">
+                          <div className={`w-10 h-10 rounded-full flex items-center justify-center font-bold text-sm ${currentStep >= step ? 'bg-gold text-white' : 'bg-muted text-body-muted'}`}>
+                            {step}
+                          </div>
+                          <p className="text-xs mt-2 font-medium text-navy">
+                            {step === 1 ? 'Personal' : step === 2 ? 'College' : 'Business'}
+                          </p>
+                        </div>
+                        {step < 3 && (
+                          <div className={`h-0.5 flex-1 ${currentStep > step ? 'bg-gold' : 'bg-border-light'}`} />
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
               {submitted ? (
                 <div className="text-center py-12">
                   <Rocket size={48} className="text-gold mx-auto mb-4" />
@@ -517,124 +614,247 @@ function ContactSection() {
                   <p className="text-body-muted text-sm mt-2">Thank you! We'll get back to you within 24-48 hours.</p>
                 </div>
               ) : (
-                <form className="space-y-6" onSubmit={handleSubmit}>
-                  {error && <p className="text-destructive text-sm bg-destructive/10 p-2 rounded">{error}</p>}
-
-                  {/* Personal Information */}
-                  <div>
-                    <h4 className="font-bold text-navy text-sm mb-3 border-b border-border-light pb-2">Personal Information</h4>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                      <input name="full_name" placeholder="Full Name *" required className={inputClass} />
-                      <input name="phone" type="tel" placeholder="Phone Number *" required className={inputClass} />
-                      <input name="whatsapp" type="tel" placeholder="WhatsApp Number" className={inputClass} />
-                      <input name="email" type="email" placeholder="Email Address *" required className={inputClass} />
-                      <input name="linkedin" placeholder="LinkedIn Profile (Optional)" className={`${inputClass} md:col-span-2`} />
+                <form className="space-y-6" onSubmit={(e) => {
+                  e.preventDefault();
+                  if (currentStep === 3 && validateStep3()) {
+                    handleSubmit(e);
+                  }
+                }}>
+                  {error && (
+                    <div className="text-destructive text-sm bg-destructive/10 p-3 rounded-lg border border-destructive/20">
+                      <p className="font-semibold">⚠️ {error}</p>
                     </div>
-                  </div>
+                  )}
 
-                  {/* College Details */}
-                  <div>
-                    <h4 className="font-bold text-navy text-sm mb-3 border-b border-border-light pb-2">College Details</h4>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                      <input name="college_name" placeholder="College/University Name *" required className={inputClass} />
-                      <input name="campus_location" placeholder="Campus Location *" required className={inputClass} />
-                      <select name="state" required className={`${inputClass} text-body-muted`}>
-                        <option value="">Select State *</option>
-                        {indianStates.map((s) => <option key={s} value={s}>{s}</option>)}
-                      </select>
-                      <input name="num_hostels" placeholder="Number of Hostels" className={inputClass} />
-                      <input name="student_strength" placeholder="Approx Student Strength" className={inputClass} />
-                      <select name="hostel_type" className={`${inputClass} text-body-muted`}>
-                        <option value="">Hostel Type</option>
-                        <option value="Boys Hostel">Boys Hostel</option>
-                        <option value="Girls Hostel">Girls Hostel</option>
-                        <option value="Both">Both</option>
-                      </select>
+                  {/* Step 1: Personal Information */}
+                  {currentStep === 1 && (
+                    <div className="space-y-4">
+                      <h4 className="font-bold text-navy text-sm mb-3 border-b border-border-light pb-2">Personal Information</h4>
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <input name="full_name" placeholder="Full Name *" required className={inputClass} />
+                        <input name="phone" type="tel" placeholder="Phone Number *" required className={inputClass} />
+                        <input name="whatsapp" type="tel" placeholder="WhatsApp Number" className={inputClass} />
+                        <input name="email" type="email" placeholder="Email Address *" required className={inputClass} />
+                      </div>
+                      <input name="linkedin" placeholder="LinkedIn Profile (Optional)" className={inputClass} />
+                      
+                      <button 
+                        type="button" 
+                        onClick={() => handleNextStep(2)} 
+                        className="btn-primary w-full"
+                      >
+                        Next: College Details
+                      </button>
                     </div>
-                  </div>
+                  )}
 
-                  {/* Business Information */}
-                  <div>
-                    <h4 className="font-bold text-navy text-sm mb-3 border-b border-border-light pb-2">Business Information</h4>
-                    <div className="space-y-3">
+                  {/* Step 2: College Details */}
+                  {currentStep === 2 && (
+                    <div className="space-y-4">
+                      <h4 className="font-bold text-navy text-sm mb-3 border-b border-border-light pb-2">College Details</h4>
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <input name="college_name" placeholder="College/University Name *" required className={inputClass} />
+                        <input name="campus_location" placeholder="Campus Location *" required className={inputClass} />
+                        <select name="state" required className={`${inputClass} text-body-muted`}>
+                          <option value="">Select State *</option>
+                          {indianStates.map((s) => <option key={s} value={s}>{s}</option>)}
+                        </select>
+                        <input name="num_hostels" placeholder="Number of Hostels" className={inputClass} />
+                        <input name="student_strength" placeholder="Approx Student Strength" className={inputClass} />
+                        <select name="hostel_type" className={`${inputClass} text-body-muted`}>
+                          <option value="">Hostel Type</option>
+                          <option value="Boys Hostel">Boys Hostel</option>
+                          <option value="Girls Hostel">Girls Hostel</option>
+                          <option value="Both">Both</option>
+                        </select>
+                      </div>
+
+                      {/* Upload Documents */}
+                      <div className="space-y-4 pt-4">
+                        <h5 className="font-semibold text-navy text-sm">Upload Documents</h5>
+                        
+                        <div>
+                          <label className="text-sm font-medium text-navy block mb-2">College ID</label>
+                          <input name="college_id" type="file" accept="image/*,.pdf" className="text-sm w-full border border-border-light rounded-lg px-3 py-2 focus:outline-none focus:border-gold" />
+                        </div>
+
+                        <div>
+                          <label className="text-sm font-medium text-navy block mb-2">Government ID</label>
+                          <select 
+                            value={govIdType} 
+                            onChange={(e) => setGovIdType(e.target.value)}
+                            className="w-full px-4 py-3 rounded-lg border border-border-light text-sm focus:outline-none focus:border-gold mb-3"
+                          >
+                            <option value="">Select ID Type</option>
+                            <option value="Aadhaar Card">Aadhaar Card</option>
+                            <option value="PAN Card">PAN Card</option>
+                            <option value="Voter ID">Voter ID</option>
+                            <option value="Driving License">Driving License</option>
+                            <option value="Passport">Passport</option>
+                          </select>
+                          
+                          {govIdType && (
+                            <div className="mt-2">
+                              <input 
+                                name="government_id" 
+                                type="file" 
+                                accept="image/*,.pdf" 
+                                className="text-sm w-full border border-border-light rounded-lg px-3 py-2 focus:outline-none focus:border-gold" 
+                              />
+                              <p className="text-xs text-body-muted mt-1">Upload your {govIdType}</p>
+                            </div>
+                          )}
+                        </div>
+
+                        <div>
+                          <label className="text-sm font-medium text-navy block mb-2">Campus Photos (Optional)</label>
+                          <input name="campus_photos" type="file" accept="image/*" className="text-sm w-full border border-border-light rounded-lg px-3 py-2 focus:outline-none focus:border-gold" />
+                        </div>
+                      </div>
+                      
+                      <div className="flex gap-3">
+                        <button 
+                          type="button" 
+                          onClick={() => setCurrentStep(1)} 
+                          className="btn-secondary flex-1"
+                        >
+                          Back
+                        </button>
+                        <button 
+                          type="button" 
+                          onClick={() => handleNextStep(3)} 
+                          className="btn-primary flex-1"
+                        >
+                          Next: Business Details
+                        </button>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Step 3: Business & Operational Details */}
+                  {currentStep === 3 && (
+                    <div className="space-y-4">
+                      <h4 className="font-bold text-navy text-sm mb-3 border-b border-border-light pb-2">Business & Operational Details</h4>
+                      
                       <textarea name="why_collegecart" rows={3} placeholder="Why do you want to start CollegeCart?" className={`${inputClass} resize-none`} />
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                        <select name="team_experience" className={`${inputClass} text-body-muted`}>
-                          <option value="">Have you handled any team before?</option>
-                          <option value="Yes">Yes</option>
-                          <option value="No">No</option>
-                        </select>
-                        <select name="has_delivery_partners" className={`${inputClass} text-body-muted`}>
-                          <option value="">Do you have delivery partners/team?</option>
-                          <option value="Yes">Yes</option>
-                          <option value="No">No</option>
-                        </select>
+                      
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <input name="starting_hostel" placeholder="Which hostel do you want to start from?" className={inputClass} />
                         <input name="target_students" placeholder="Estimated students you can target" className={inputClass} />
                       </div>
-                    </div>
-                  </div>
 
-                  {/* Operational Details */}
-                  <div>
-                    <h4 className="font-bold text-navy text-sm mb-3 border-b border-border-light pb-2">Operational Details</h4>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                      <select name="outside_delivery_allowed" className={`${inputClass} text-body-muted`}>
-                        <option value="">Outside deliveries allowed in campus?</option>
-                        <option value="Yes">Yes</option>
-                        <option value="No">No</option>
-                        <option value="Not Sure">Not Sure</option>
-                      </select>
-                      <select name="existing_delivery_apps" className={`${inputClass} text-body-muted`}>
-                        <option value="">Existing delivery apps inside campus?</option>
-                        <option value="Yes">Yes</option>
-                        <option value="No">No</option>
-                        <option value="Not Sure">Not Sure</option>
-                      </select>
-                      <select name="launch_timeline" className={`${inputClass} text-body-muted`}>
-                        <option value="">Preferred launch timeline</option>
-                        <option value="Immediately">Immediately</option>
-                        <option value="Within 1 Week">Within 1 Week</option>
-                        <option value="Within 2 Weeks">Within 2 Weeks</option>
-                        <option value="Within 1 Month">Within 1 Month</option>
-                      </select>
-                      <select name="can_manage_daily" className={`${inputClass} text-body-muted`}>
-                        <option value="">Can you manage daily operations?</option>
-                        <option value="Yes">Yes</option>
-                        <option value="No">No</option>
-                        <option value="With Help">With Help</option>
-                      </select>
-                    </div>
-                  </div>
+                      {/* Questions in 2 columns */}
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        {/* Team Experience */}
+                        <div className="border border-border-light rounded-lg">
+                          <div className="px-4 py-3 bg-muted/30">
+                            <p className="text-sm font-medium text-navy">Have you handled any team before?</p>
+                          </div>
+                          <div className="px-4 py-3">
+                            <select name="team_experience" required className="w-full px-3 py-2 rounded border border-border-light text-sm focus:outline-none focus:border-gold">
+                              <option value="">Select your answer</option>
+                              <option value="Yes">Yes</option>
+                              <option value="No">No</option>
+                            </select>
+                          </div>
+                        </div>
 
-                  {/* Upload Section */}
-                  <div>
-                    <h4 className="font-bold text-navy text-sm mb-3 border-b border-border-light pb-2">Upload Documents</h4>
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-                      <div>
-                        <label className="text-xs text-body-muted block mb-1">College ID</label>
-                        <input name="college_id" type="file" accept="image/*,.pdf" className="text-sm w-full" />
+                        {/* Delivery Partners */}
+                        <div className="border border-border-light rounded-lg">
+                          <div className="px-4 py-3 bg-muted/30">
+                            <p className="text-sm font-medium text-navy">Do you have delivery partners/team?</p>
+                          </div>
+                          <div className="px-4 py-3">
+                            <select name="has_delivery_partners" required className="w-full px-3 py-2 rounded border border-border-light text-sm focus:outline-none focus:border-gold">
+                              <option value="">Select your answer</option>
+                              <option value="Yes">Yes</option>
+                              <option value="No">No</option>
+                            </select>
+                          </div>
+                        </div>
+
+                        {/* Outside Deliveries */}
+                        <div className="border border-border-light rounded-lg">
+                          <div className="px-4 py-3 bg-muted/30">
+                            <p className="text-sm font-medium text-navy">Outside deliveries allowed in campus?</p>
+                          </div>
+                          <div className="px-4 py-3">
+                            <select name="outside_delivery_allowed" required className="w-full px-3 py-2 rounded border border-border-light text-sm focus:outline-none focus:border-gold">
+                              <option value="">Select your answer</option>
+                              <option value="Yes">Yes</option>
+                              <option value="No">No</option>
+                              <option value="Not Sure">Not Sure</option>
+                            </select>
+                          </div>
+                        </div>
+
+                        {/* Existing Apps */}
+                        <div className="border border-border-light rounded-lg">
+                          <div className="px-4 py-3 bg-muted/30">
+                            <p className="text-sm font-medium text-navy">Existing delivery apps inside campus?</p>
+                          </div>
+                          <div className="px-4 py-3">
+                            <select name="existing_delivery_apps" required className="w-full px-3 py-2 rounded border border-border-light text-sm focus:outline-none focus:border-gold">
+                              <option value="">Select your answer</option>
+                              <option value="Yes">Yes</option>
+                              <option value="No">No</option>
+                              <option value="Not Sure">Not Sure</option>
+                            </select>
+                          </div>
+                        </div>
+
+                        {/* Launch Timeline */}
+                        <div className="border border-border-light rounded-lg">
+                          <div className="px-4 py-3 bg-muted/30">
+                            <p className="text-sm font-medium text-navy">Preferred launch timeline</p>
+                          </div>
+                          <div className="px-4 py-3">
+                            <select name="launch_timeline" required className="w-full px-3 py-2 rounded border border-border-light text-sm focus:outline-none focus:border-gold">
+                              <option value="">Select your answer</option>
+                              <option value="Immediately">Immediately</option>
+                              <option value="Within 1 Week">Within 1 Week</option>
+                              <option value="Within 2 Weeks">Within 2 Weeks</option>
+                              <option value="Within 1 Month">Within 1 Month</option>
+                            </select>
+                          </div>
+                        </div>
+
+                        {/* Daily Operations */}
+                        <div className="border border-border-light rounded-lg">
+                          <div className="px-4 py-3 bg-muted/30">
+                            <p className="text-sm font-medium text-navy">Can you manage daily operations?</p>
+                          </div>
+                          <div className="px-4 py-3">
+                            <select name="can_manage_daily" required className="w-full px-3 py-2 rounded border border-border-light text-sm focus:outline-none focus:border-gold">
+                              <option value="">Select your answer</option>
+                              <option value="Yes">Yes</option>
+                              <option value="No">No</option>
+                              <option value="With Help">With Help</option>
+                            </select>
+                          </div>
+                        </div>
                       </div>
-                      <div>
-                        <label className="text-xs text-body-muted block mb-1">Government ID</label>
-                        <input name="government_id" type="file" accept="image/*,.pdf" className="text-sm w-full" />
-                      </div>
-                      <div>
-                        <label className="text-xs text-body-muted block mb-1">Campus Photos (Optional)</label>
-                        <input name="campus_photos" type="file" accept="image/*" className="text-sm w-full" />
+
+                      {/* Acknowledgement */}
+                      <label className="flex items-start gap-2 text-sm text-body-muted cursor-pointer">
+                        <input name="acknowledged" type="checkbox" required className="mt-1 accent-gold" />
+                        I understand this is an independent campus partnership opportunity.
+                      </label>
+
+                      <div className="flex gap-3">
+                        <button 
+                          type="button" 
+                          onClick={() => setCurrentStep(2)} 
+                          className="btn-secondary flex-1"
+                        >
+                          Back
+                        </button>
+                        <button type="submit" disabled={submitting} className="btn-primary flex-1">
+                          {submitting ? "Submitting..." : "Apply For Free Franchise"}
+                        </button>
                       </div>
                     </div>
-                  </div>
-
-                  {/* Acknowledgement */}
-                  <label className="flex items-start gap-2 text-sm text-body-muted cursor-pointer">
-                    <input name="acknowledged" type="checkbox" required className="mt-1 accent-gold" />
-                    I understand this is an independent campus partnership opportunity.
-                  </label>
-
-                  <button type="submit" disabled={submitting} className="btn-primary w-full text-base">
-                    {submitting ? "Submitting..." : "🚀 Apply For Free Franchise"}
-                  </button>
+                  )}
                 </form>
               )}
             </div>
