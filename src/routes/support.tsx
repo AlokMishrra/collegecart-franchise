@@ -1,11 +1,11 @@
-import { createFileRoute } from "@tanstack/react-router";
+// import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 import Layout from "@/components/Layout";
 import { useScrollReveal } from "@/components/useScrollReveal";
 import { Plus, Minus } from "lucide-react";
 import faqImg from "@/assets/faq-illustration.jpg";
 
-export const Route = createFileRoute("/support")({
+/* Commented out for Vercel deploymentexport const Route = createFileRoute("/support")({
   head: () => ({
     meta: [
       { title: "FAQ — CollegeCart" },
@@ -13,7 +13,7 @@ export const Route = createFileRoute("/support")({
     ],
   }),
   component: SupportPage,
-});
+});*/
 
 const faqs = [
   {
@@ -86,3 +86,6 @@ function SupportPage() {
     </Layout>
   );
 }
+
+// Export for standard React Router
+export default SupportPage;

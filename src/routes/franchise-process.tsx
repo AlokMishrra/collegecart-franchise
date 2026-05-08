@@ -1,8 +1,8 @@
-import { createFileRoute } from "@tanstack/react-router";
+// import { createFileRoute } from "@tanstack/react-router";
 import Layout from "@/components/Layout";
 import { useScrollReveal } from "@/components/useScrollReveal";
 
-export const Route = createFileRoute("/franchise-process")({
+/* Commented out for Vercel deploymentexport const Route = createFileRoute("/franchise-process")({
   head: () => ({
     meta: [
       { title: "Franchise Process — CollegeCart" },
@@ -10,7 +10,7 @@ export const Route = createFileRoute("/franchise-process")({
     ],
   }),
   component: FranchiseProcessPage,
-});
+});*/
 
 const steps = [
   { num: "01", title: "Apply Now", desc: "Submit your application online" },
@@ -52,3 +52,6 @@ function FranchiseProcessPage() {
     </Layout>
   );
 }
+
+// Export for standard React Router
+export default FranchiseProcessPage;

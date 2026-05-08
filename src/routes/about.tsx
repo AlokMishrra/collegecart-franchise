@@ -1,9 +1,9 @@
-import { createFileRoute } from "@tanstack/react-router";
+// import { createFileRoute } from "@tanstack/react-router";
 import Layout from "@/components/Layout";
 import { useScrollReveal } from "@/components/useScrollReveal";
 import aboutImg from "@/assets/about-team.jpg";
 
-export const Route = createFileRoute("/about")({
+/* Commented out for Vercel deploymentexport const Route = createFileRoute("/about")({
   head: () => ({
     meta: [
       { title: "About Us — CollegeCart" },
@@ -11,7 +11,7 @@ export const Route = createFileRoute("/about")({
     ],
   }),
   component: AboutPage,
-});
+});*/
 
 const stats = [
   { value: "25+", label: "Campuses" },
@@ -68,3 +68,6 @@ function AboutPage() {
     </Layout>
   );
 }
+
+// Export for standard React Router
+export default AboutPage;

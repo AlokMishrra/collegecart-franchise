@@ -1,9 +1,9 @@
-import { createFileRoute } from "@tanstack/react-router";
+// import { createFileRoute } from "@tanstack/react-router";
 import Layout from "@/components/Layout";
 import { useScrollReveal } from "@/components/useScrollReveal";
 import { Smartphone, ShoppingBag, Truck, CheckCircle, Smile, Clock, Shield, Users, ArrowRight } from "lucide-react";
 
-export const Route = createFileRoute("/how-it-works")({
+/* Commented out for Vercel deploymentexport const Route = createFileRoute("/how-it-works")({
   head: () => ({
     meta: [
       { title: "How It Works — CollegeCart" },
@@ -11,7 +11,7 @@ export const Route = createFileRoute("/how-it-works")({
     ],
   }),
   component: HowItWorksPage,
-});
+});*/
 
 const steps = [
   { icon: Smartphone, num: "1", title: "Order", desc: "Students place order via app or WhatsApp" },
@@ -75,3 +75,6 @@ function HowItWorksPage() {
     </Layout>
   );
 }
+
+// Export for standard React Router
+export default HowItWorksPage;

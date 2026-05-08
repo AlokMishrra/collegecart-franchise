@@ -3,7 +3,7 @@ import Layout from "@/components/Layout";
 import { useScrollReveal } from "@/components/useScrollReveal";
 import { Users, Gift, Coins, TrendingUp } from "lucide-react";
 
-export const Route = createFileRoute("/franchise-opportunity")({
+/* Commented out for Vercel deploymentexport const Route = createFileRoute("/franchise-opportunity")({
   head: () => ({
     meta: [
       { title: "Franchise Opportunity — CollegeCart" },
@@ -11,7 +11,7 @@ export const Route = createFileRoute("/franchise-opportunity")({
     ],
   }),
   component: FranchiseOpportunityPage,
-});
+});*/
 
 const columns = [
   {
@@ -84,3 +84,6 @@ function FranchiseOpportunityPage() {
     </Layout>
   );
 }
+
+// Export for standard React Router
+export default FranchiseOpportunityPage;

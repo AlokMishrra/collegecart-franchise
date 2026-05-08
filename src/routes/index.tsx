@@ -1,4 +1,5 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute } from '@tanstack/react-router'
+// import { createFileRoute } from "@tanstack/react-router";
 import { useState, useEffect } from "react";
 import {
   ShoppingBag, TrendingUp, Shield, Headphones, Download,
@@ -20,6 +21,7 @@ import heroImg from "@/assets/hero-student.jpg";
 import aboutImg from "@/assets/about-team.jpg";
 import faqImg from "@/assets/faq-illustration.jpg";
 
+/* Commented out for Vercel deployment
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
@@ -32,6 +34,7 @@ export const Route = createFileRoute("/")({
   }),
   component: HomePage,
 });
+*/
 
 /* ─── Section: Hero ─── */
 function HeroSection() {
@@ -883,3 +886,7 @@ function HomePage() {
     </Layout>
   );
 }
+
+
+// Export for standard React Router
+export default HomePage;

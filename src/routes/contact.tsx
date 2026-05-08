@@ -1,10 +1,10 @@
-import { createFileRoute } from "@tanstack/react-router";
+// import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 import Layout from "@/components/Layout";
 import { useScrollReveal } from "@/components/useScrollReveal";
 import { Phone, Mail, Globe } from "lucide-react";
 
-export const Route = createFileRoute("/contact")({
+/* Commented out for Vercel deploymentexport const Route = createFileRoute("/contact")({
   head: () => ({
     meta: [
       { title: "Contact & Apply — CollegeCart" },
@@ -12,7 +12,7 @@ export const Route = createFileRoute("/contact")({
     ],
   }),
   component: ContactPage,
-});
+});*/
 
 function ContactPage() {
   const ref = useScrollReveal();
@@ -118,3 +118,6 @@ function ContactPage() {
     </Layout>
   );
 }
+
+// Export for standard React Router
+export default ContactPage;

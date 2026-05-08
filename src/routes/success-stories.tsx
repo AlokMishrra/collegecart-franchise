@@ -1,9 +1,9 @@
-import { createFileRoute } from "@tanstack/react-router";
+// import { createFileRoute } from "@tanstack/react-router";
 import Layout from "@/components/Layout";
 import { useScrollReveal } from "@/components/useScrollReveal";
 import { Star, Quote } from "lucide-react";
 
-export const Route = createFileRoute("/success-stories")({
+/* Commented out for Vercel deploymentexport const Route = createFileRoute("/success-stories")({
   head: () => ({
     meta: [
       { title: "Success Stories — CollegeCart" },
@@ -11,7 +11,7 @@ export const Route = createFileRoute("/success-stories")({
     ],
   }),
   component: SuccessStoriesPage,
-});
+});*/
 
 const testimonials = [
   {
@@ -76,3 +76,6 @@ function SuccessStoriesPage() {
     </Layout>
   );
 }
+
+// Export for standard React Router
+export default SuccessStoriesPage;

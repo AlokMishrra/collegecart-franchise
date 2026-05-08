@@ -1,9 +1,9 @@
-import { createFileRoute } from "@tanstack/react-router";
+// import { createFileRoute } from "@tanstack/react-router";
 import Layout from "@/components/Layout";
 import { useScrollReveal } from "@/components/useScrollReveal";
 import { BarChart3, Building2, Banknote, Percent, Headphones, ArrowUpRight } from "lucide-react";
 
-export const Route = createFileRoute("/why-us")({
+/* Commented out for Vercel deploymentexport const Route = createFileRoute("/why-us")({
   head: () => ({
     meta: [
       { title: "Why CollegeCart — Partner With Us" },
@@ -11,7 +11,7 @@ export const Route = createFileRoute("/why-us")({
     ],
   }),
   component: WhyUsPage,
-});
+});*/
 
 const features = [
   { icon: BarChart3, title: "Proven Business Model", desc: "Tested and successful in multiple campuses." },
@@ -48,3 +48,6 @@ function WhyUsPage() {
     </Layout>
   );
 }
+
+// Export for standard React Router
+export default WhyUsPage;
