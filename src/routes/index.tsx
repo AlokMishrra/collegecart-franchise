@@ -156,17 +156,18 @@ function HowItWorksSection() {
         <div ref={ref} className="container-main fade-in-up text-center">
           <p className="section-label mb-3">HOW IT WORKS</p>
           <h2 className="section-heading mb-12">Simple. Smart. Seamless.</h2>
-          <div className="flex flex-col lg:flex-row items-start justify-center gap-4 lg:gap-0">
+          <div className="flex flex-row items-start justify-start lg:justify-center gap-6 lg:gap-0 overflow-x-auto pb-4 lg:pb-0">
             {howSteps.map((s, i) => (
-              <div key={s.num} className="flex items-center">
-                <div className="flex flex-col items-center text-center w-40">
-                  <div className="w-16 h-16 rounded-full bg-gold/10 flex items-center justify-center mb-3">
-                    <s.icon size={28} className="text-gold" />
+              <div key={s.num} className="flex items-center shrink-0">
+                <div className="flex flex-col items-center text-center w-32 lg:w-40">
+                  <div className="w-14 h-14 lg:w-16 lg:h-16 rounded-full bg-gold/10 flex items-center justify-center mb-3">
+                    <s.icon size={24} className="text-gold lg:hidden" />
+                    <s.icon size={28} className="text-gold hidden lg:block" />
                   </div>
-                  <p className="font-bold text-navy text-sm">{s.num}. {s.title}</p>
-                  <p className="text-xs text-body-muted mt-1 leading-relaxed">{s.desc}</p>
+                  <p className="font-bold text-navy text-xs lg:text-sm">{s.num}. {s.title}</p>
+                  <p className="text-[10px] lg:text-xs text-body-muted mt-1 leading-relaxed">{s.desc}</p>
                 </div>
-                {i < howSteps.length - 1 && <ArrowRight size={24} className="text-gold hidden lg:block mx-2 mt-[-2rem]" />}
+                {i < howSteps.length - 1 && <ArrowRight size={20} className="text-gold mx-1 lg:mx-2 mt-[-2rem] shrink-0" />}
               </div>
             ))}
           </div>
@@ -284,14 +285,14 @@ function FranchiseProcessSection() {
         <h2 className="section-heading mb-16">Your Journey With Us</h2>
         <div className="relative">
           <div className="hidden lg:block absolute top-6 left-[10%] right-[10%] h-0.5 bg-border-light" />
-          <div className="grid grid-cols-1 lg:grid-cols-5 gap-10 lg:gap-4">
+          <div className="flex flex-row items-start justify-start lg:justify-center gap-6 lg:gap-4 overflow-x-auto pb-4 lg:pb-0">
             {processSteps.map((s, i) => (
-              <div key={s.num} className="flex flex-col items-center relative">
-                <div className={`w-12 h-12 rounded-full flex items-center justify-center font-bold text-sm z-10 ${i === 0 ? "bg-gold text-white" : "bg-white text-navy border-2 border-border-light"}`}>
+              <div key={s.num} className="flex flex-col items-center relative shrink-0 w-28 lg:w-auto">
+                <div className={`w-11 h-11 lg:w-12 lg:h-12 rounded-full flex items-center justify-center font-bold text-xs lg:text-sm z-10 ${i === 0 ? "bg-gold text-white" : "bg-white text-navy border-2 border-border-light"}`}>
                   {s.num}
                 </div>
-                <h3 className="font-bold text-navy mt-4 text-sm">{s.title}</h3>
-                <p className="text-xs text-body-muted mt-1 max-w-[160px] leading-relaxed">{s.desc}</p>
+                <h3 className="font-bold text-navy mt-3 lg:mt-4 text-xs lg:text-sm">{s.title}</h3>
+                <p className="text-[10px] lg:text-xs text-body-muted mt-1 max-w-[120px] lg:max-w-[160px] leading-relaxed">{s.desc}</p>
               </div>
             ))}
           </div>
