@@ -54,9 +54,21 @@ export default function Footer() {
           <div>
             <h4 className="font-bold mb-4 text-sm">Contact</h4>
             <div className="space-y-2 text-sm text-white/70 mb-6">
-              <p>📞 +91 7248316506</p>
-              <p>📧 franchise@collegecarts.in</p>
-              <p>🌐 www.collegecarts.in</p>
+              <p>
+                <a href="tel:+917248316506" className="hover:text-gold transition-colors">
+                  📞 +91 7248316506
+                </a>
+              </p>
+              <p>
+                <a href="mailto:franchise@collegecarts.in" className="hover:text-gold transition-colors">
+                  📧 franchise@collegecarts.in
+                </a>
+              </p>
+              <p>
+                <a href="https://www.collegecarts.in" target="_blank" rel="noopener noreferrer" className="hover:text-gold transition-colors">
+                  🌐 www.collegecarts.in
+                </a>
+              </p>
             </div>
             <h4 className="font-bold mb-3 text-sm">Follow Us</h4>
             <div className="flex gap-3">

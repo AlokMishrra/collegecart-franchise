@@ -1,9 +1,9 @@
 import { useState, useEffect, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
-import { getApplications, getBrochures, addBrochure, seedAdmin } from "@/lib/admin.functions";
+import { getApplications, getBrochures, addBrochure, deleteBrochure, seedAdmin } from "@/lib/admin.functions";
 import {
-  LogOut, Upload, FileText, Users, Eye, ChevronDown, ChevronUp, RefreshCw,
+  LogOut, Upload, FileText, Users, Eye, ChevronDown, ChevronUp, RefreshCw, Trash2,
 } from "lucide-react";
 
 type Application = {
@@ -52,6 +52,7 @@ function AdminDashboard() {
   const [uploading, setUploading] = useState(false);
   const [userId, setUserId] = useState<string>("");
   const [loading, setLoading] = useState(true);
+  const [deleteConfirm, setDeleteConfirm] = useState<{ id: string; url: string; name: string } | null>(null);
 
   const checkAuth = useCallback(async () => {
     const { data: { user } } = await supabase.auth.getUser();
@@ -102,6 +103,23 @@ function AdminDashboard() {
     await addBrochure({ file_name: file.name, file_url: urlData.publicUrl, uploaded_by: userId });
     await loadData();
     setUploading(false);
+  };
+
+  const handleDelete = async (brochureId: string, fileUrl: string, fileName: string) => {
+    setDeleteConfirm({ id: brochureId, url: fileUrl, name: fileName });
+  };
+
+  const confirmDelete = async () => {
+    if (!deleteConfirm) return;
+    
+    try {
+      await deleteBrochure(deleteConfirm.id, deleteConfirm.url);
+      await loadData();
+      setDeleteConfirm(null);
+    } catch (err) {
+      alert("Delete failed: " + (err as Error).message);
+      setDeleteConfirm(null);
+    }
   };
 
   return (
@@ -297,7 +315,14 @@ function AdminDashboard() {
                   </div>
                   <div className="flex items-center gap-3">
                     {b.is_active && <span className="text-xs bg-gold/10 text-gold font-bold px-2 py-1 rounded">Active</span>}
-                    <a href={b.file_url} target="_blank" rel="noreferrer" className="text-gold text-sm font-bold">Download</a>
+                    <a href={b.file_url} target="_blank" rel="noreferrer" className="text-gold text-sm font-bold hover:underline">Download</a>
+                    <button
+                      onClick={() => handleDelete(b.id, b.file_url, b.file_name)}
+                      className="text-red-600 hover:text-red-700 p-2 hover:bg-red-50 rounded transition-colors"
+                      title="Delete brochure"
+                    >
+                      <Trash2 size={16} />
+                    </button>
                   </div>
                 </div>
               ))}
@@ -305,6 +330,32 @@ function AdminDashboard() {
           </div>
         )}
       </div>
+
+      {/* Delete Confirmation Dialog */}
+      {deleteConfirm && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-lg shadow-xl max-w-md w-full p-6">
+            <h3 className="text-lg font-bold text-navy mb-3">Delete Brochure</h3>
+            <p className="text-body-muted mb-6">
+              Are you sure you want to delete <span className="font-bold text-navy">"{deleteConfirm.name}"</span>? This action cannot be undone.
+            </p>
+            <div className="flex gap-3 justify-end">
+              <button
+                onClick={() => setDeleteConfirm(null)}
+                className="px-4 py-2 rounded-lg border border-border-light text-navy font-medium hover:bg-gray-50 transition-colors"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={confirmDelete}
+                className="px-4 py-2 rounded-lg bg-red-600 text-white font-medium hover:bg-red-700 transition-colors"
+              >
+                Delete
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

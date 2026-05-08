@@ -666,11 +666,11 @@ function ContactSection() {
             <div className="space-y-5">
               <div className="flex items-center gap-4">
                 <div className="w-10 h-10 rounded-full bg-gold/10 flex items-center justify-center"><Phone size={18} className="text-gold" /></div>
-                <span className="text-sm font-medium text-navy">+91 7248316506</span>
+                <a href="tel:+917248316506" className="text-sm font-medium text-navy hover:text-gold transition-colors">+91 7248316506</a>
               </div>
               <div className="flex items-center gap-4">
                 <div className="w-10 h-10 rounded-full bg-gold/10 flex items-center justify-center"><Mail size={18} className="text-gold" /></div>
-                <span className="text-sm font-medium text-navy">franchise@collegecarts.in</span>
+                <a href="mailto:franchise@collegecarts.in" className="text-sm font-medium text-navy hover:text-gold transition-colors">franchise@collegecarts.in</a>
               </div>
               <div className="flex items-center gap-4">
                 <div className="w-10 h-10 rounded-full bg-gold/10 flex items-center justify-center"><Globe size={18} className="text-gold" /></div>

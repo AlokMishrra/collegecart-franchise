@@ -9,69 +9,27 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as AdminIndexRouteImport } from './routes/admin/index'
-import { Route as AdminDashboardRouteImport } from './routes/admin/dashboard'
 
-const AdminIndexRoute = AdminIndexRouteImport.update({
-  id: '/admin/',
-  path: '/admin/',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const AdminDashboardRoute = AdminDashboardRouteImport.update({
-  id: '/admin/dashboard',
-  path: '/admin/dashboard',
-  getParentRoute: () => rootRouteImport,
-} as any)
-
-export interface FileRoutesByFullPath {
-  '/admin/dashboard': typeof AdminDashboardRoute
-  '/admin/': typeof AdminIndexRoute
-}
-export interface FileRoutesByTo {
-  '/admin/dashboard': typeof AdminDashboardRoute
-  '/admin': typeof AdminIndexRoute
-}
+export interface FileRoutesByFullPath {}
+export interface FileRoutesByTo {}
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
-  '/admin/dashboard': typeof AdminDashboardRoute
-  '/admin/': typeof AdminIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/admin/dashboard' | '/admin/'
+  fullPaths: never
   fileRoutesByTo: FileRoutesByTo
-  to: '/admin/dashboard' | '/admin'
-  id: '__root__' | '/admin/dashboard' | '/admin/'
+  to: never
+  id: '__root__'
   fileRoutesById: FileRoutesById
 }
-export interface RootRouteChildren {
-  AdminDashboardRoute: typeof AdminDashboardRoute
-  AdminIndexRoute: typeof AdminIndexRoute
-}
+export interface RootRouteChildren {}
 
 declare module '@tanstack/react-router' {
-  interface FileRoutesByPath {
-    '/admin/': {
-      id: '/admin/'
-      path: '/admin'
-      fullPath: '/admin/'
-      preLoaderRoute: typeof AdminIndexRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/admin/dashboard': {
-      id: '/admin/dashboard'
-      path: '/admin/dashboard'
-      fullPath: '/admin/dashboard'
-      preLoaderRoute: typeof AdminDashboardRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-  }
+  interface FileRoutesByPath {}
 }
 
-const rootRouteChildren: RootRouteChildren = {
-  AdminDashboardRoute: AdminDashboardRoute,
-  AdminIndexRoute: AdminIndexRoute,
-}
+const rootRouteChildren: RootRouteChildren = {}
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
