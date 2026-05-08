@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   ShoppingBag, TrendingUp, Shield, Headphones, Download,
   Smartphone, Truck, CheckCircle, Smile, Clock, Users, ArrowRight,
@@ -7,10 +7,15 @@ import {
   Gift, Coins,
   Star, Quote,
   Plus, Minus,
-  Phone, Mail, Globe,
+  Phone, Mail, Globe, Upload, Rocket,
+  GraduationCap, UserCheck, Home as HomeIcon, Megaphone, Briefcase, Heart,
+  DollarSign, Package, Handshake, BarChart, Zap, BookOpen,
+  Layers, Settings, Target, Award,
 } from "lucide-react";
 import Layout from "@/components/Layout";
 import { useScrollReveal } from "@/components/useScrollReveal";
+import { supabase } from "@/integrations/supabase/client";
+import { getActiveBrochure } from "@/lib/admin.functions";
 import heroImg from "@/assets/hero-student.jpg";
 import aboutImg from "@/assets/about-team.jpg";
 import faqImg from "@/assets/faq-illustration.jpg";
@@ -18,8 +23,11 @@ import faqImg from "@/assets/faq-illustration.jpg";
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "CollegeCart — Build A Profitable Campus Business" },
-      { name: "description", content: "Join CollegeCart Franchise and bring smart convenience to students while building a high-growth business on your campus." },
+      { title: "CollegeCart Franchise Opportunity | Start Campus Delivery Business Without Investment" },
+      { name: "description", content: "Start your own CollegeCart franchise in your college campus with zero investment. Build a profitable student delivery business and earn up to ₹1 lakh/month with full support, technology, and operations from CollegeCart." },
+      { name: "keywords", content: "college franchise opportunity, student startup business, campus delivery franchise, hostel delivery business, student business opportunity, zero investment franchise india, campus startup idea, earn money in college, college delivery app, hostel grocery delivery, college entrepreneurship, student franchise model, collegecart franchise" },
+      { property: "og:title", content: "CollegeCart Franchise Opportunity | Start Campus Delivery Business Without Investment" },
+      { property: "og:description", content: "Start your own CollegeCart franchise in your college campus with zero investment. Build a profitable student delivery business and earn up to ₹1 lakh/month." },
     ],
   }),
   component: HomePage,
@@ -28,24 +36,44 @@ export const Route = createFileRoute("/")({
 /* ─── Section: Hero ─── */
 function HeroSection() {
   const ref = useScrollReveal();
+  const [brochureUrl, setBrochureUrl] = useState<string | null>(null);
+
+  useEffect(() => {
+    getActiveBrochure().then((b) => {
+      if (b) setBrochureUrl(b.file_url);
+    }).catch(() => {});
+  }, []);
+
   return (
     <section id="home" className="bg-background">
       <div ref={ref} className="container-main fade-in-up py-12 lg:py-20 flex flex-col lg:flex-row items-center gap-10">
         <div className="lg:w-[60%]">
           <span className="inline-block bg-navy/10 text-navy text-xs font-semibold px-3 py-1 rounded-full mb-5 uppercase tracking-wide">
-            Campus Franchise Opportunity
+            Zero Investment Franchise Opportunity
           </span>
           <h1 className="text-4xl lg:text-5xl xl:text-[3.4rem] font-extrabold text-navy leading-tight">
-            Build A Profitable<br />Business On Your<br />Campus
+            Start Your Own Campus<br />Business With<br />CollegeCart
           </h1>
           <p className="mt-5 text-body-muted text-base leading-relaxed max-w-lg">
-            Join CollegeCart Franchise and bring smart convenience to students while building a high-growth business.
+            Build a profitable student delivery business inside your college campus with CollegeCart. No franchise fee, no royalty, no experience needed. Earn up to ₹1,00,000/month by solving daily student needs through fast hostel delivery.
           </p>
+          <div className="mt-5 flex flex-wrap gap-3 text-sm text-navy font-medium">
+            <span className="flex items-center gap-1"><CheckCircle size={16} className="text-gold" /> Zero Investment</span>
+            <span className="flex items-center gap-1"><CheckCircle size={16} className="text-gold" /> 100% Campus Profit</span>
+            <span className="flex items-center gap-1"><CheckCircle size={16} className="text-gold" /> Full Operational Support</span>
+            <span className="flex items-center gap-1"><CheckCircle size={16} className="text-gold" /> Student-Led Business Model</span>
+          </div>
           <div className="mt-7 flex flex-wrap gap-4">
-            <a href="#contact" onClick={(e) => { e.preventDefault(); document.getElementById("contact")?.scrollIntoView({ behavior: "smooth" }); }} className="btn-primary">Apply For Franchise</a>
-            <button className="btn-secondary inline-flex items-center gap-2">
-              <Download size={16} /> Download Brochure
-            </button>
+            <a href="#contact" onClick={(e) => { e.preventDefault(); document.getElementById("contact")?.scrollIntoView({ behavior: "smooth" }); }} className="btn-primary">Apply For Free Franchise</a>
+            {brochureUrl ? (
+              <a href={brochureUrl} target="_blank" rel="noreferrer" className="btn-secondary inline-flex items-center gap-2">
+                <Download size={16} /> Download Franchise Brochure
+              </a>
+            ) : (
+              <button className="btn-secondary inline-flex items-center gap-2" disabled>
+                <Download size={16} /> Download Franchise Brochure
+              </button>
+            )}
           </div>
         </div>
         <div className="lg:w-[40%]">
@@ -58,10 +86,10 @@ function HeroSection() {
 
 /* ─── Stats Bar ─── */
 const heroStats = [
-  { icon: ShoppingBag, title: "High Demand", sub: "On Every Campus" },
-  { icon: TrendingUp, title: "Low Investment", sub: "High Returns" },
-  { icon: Shield, title: "Proven Business", sub: "Model" },
-  { icon: Headphones, title: "Full Support", sub: "& Training" },
+  { icon: ShoppingBag, title: "25+", sub: "Active Campuses" },
+  { icon: Users, title: "5+", sub: "Students Served" },
+  { icon: Truck, title: "300+", sub: "Campus Delivery Partners" },
+  { icon: Star, title: "4.8★", sub: "Student Satisfaction Rating" },
 ];
 
 function StatsBar() {
@@ -69,14 +97,13 @@ function StatsBar() {
   return (
     <section ref={ref} className="bg-navy fade-in-up">
       <div className="container-main py-6">
+        <p className="text-center text-white/60 text-xs uppercase tracking-widest mb-4">Campus Business Built For Students</p>
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-6">
           {heroStats.map((s) => (
-            <div key={s.title} className="flex items-center gap-3 text-navy-foreground">
-              <s.icon size={28} className="text-gold shrink-0" />
-              <div>
-                <p className="font-bold text-sm">{s.title}</p>
-                <p className="text-xs text-white/70">{s.sub}</p>
-              </div>
+            <div key={s.sub} className="flex flex-col items-center text-navy-foreground text-center">
+              <s.icon size={28} className="text-gold mb-1" />
+              <p className="font-extrabold text-xl">{s.title}</p>
+              <p className="text-xs text-white/70">{s.sub}</p>
             </div>
           ))}
         </div>
@@ -86,60 +113,80 @@ function StatsBar() {
 }
 
 /* ─── Section: About ─── */
-const aboutStats = [
-  { value: "25+", label: "Campuses" },
-  { value: "50,000+", label: "Happy Students" },
-  { value: "300+", label: "Student Partners" },
-  { value: "4.8★", label: "Average Rating" },
-];
-
 function AboutSection() {
   const ref = useScrollReveal();
-  const statsRef = useScrollReveal();
   return (
-    <>
-      <section id="about" className="section-padding bg-background">
-        <div ref={ref} className="container-main fade-in-up">
-          <div className="flex flex-col lg:flex-row gap-12 items-center">
-            <div className="lg:w-1/2">
-              <p className="section-label mb-3">ABOUT US</p>
-              <h2 className="section-heading mb-6">We Make Campus Life Easier</h2>
-              <p className="text-body-muted leading-relaxed mb-4">
-                CollegeCart is India's fastest growing campus convenience delivery platform. We operate exclusively within campuses, serving hostel students with daily essentials, snacks, stationery and more — delivered fast, reliably and safely.
-              </p>
-              <p className="text-body-muted leading-relaxed">
-                Our mission is to build a student-powered network that combines convenience, employment and entrepreneurship.
-              </p>
-            </div>
-            <div className="lg:w-1/2">
-              <img src={aboutImg} alt="CollegeCart team on campus" className="rounded-2xl shadow-lg w-full" width={640} height={512} loading="lazy" />
-            </div>
+    <section id="about" className="section-padding bg-background">
+      <div ref={ref} className="container-main fade-in-up">
+        <div className="flex flex-col lg:flex-row gap-12 items-center">
+          <div className="lg:w-1/2">
+            <p className="section-label mb-3">ABOUT US</p>
+            <h2 className="section-heading mb-6">Revolutionizing Campus Convenience</h2>
+            <p className="text-body-muted leading-relaxed mb-4">
+              CollegeCart is India's growing campus-first delivery platform designed exclusively for hostel students and university campuses.
+            </p>
+            <p className="text-body-muted leading-relaxed mb-4">
+              We help students get snacks, groceries, stationery, personal care products, medicines, and daily essentials delivered directly to their hostel rooms in minutes.
+            </p>
+            <p className="text-body-muted leading-relaxed font-semibold mb-3">Our mission is simple:</p>
+            <ul className="space-y-2 text-sm text-body-muted">
+              <li className="flex items-start gap-2"><CheckCircle size={16} className="text-gold mt-0.5 shrink-0" /> Make campus life easier</li>
+              <li className="flex items-start gap-2"><CheckCircle size={16} className="text-gold mt-0.5 shrink-0" /> Create student entrepreneurship opportunities</li>
+              <li className="flex items-start gap-2"><CheckCircle size={16} className="text-gold mt-0.5 shrink-0" /> Build hyperlocal delivery networks inside campuses</li>
+            </ul>
+            <p className="text-body-muted leading-relaxed mt-4">
+              Unlike traditional delivery apps, CollegeCart operates specifically for college ecosystems — making deliveries faster, safer, and more student-friendly.
+            </p>
+          </div>
+          <div className="lg:w-1/2">
+            <img src={aboutImg} alt="CollegeCart team on campus" className="rounded-2xl shadow-lg w-full" width={640} height={512} loading="lazy" />
           </div>
         </div>
-      </section>
-      <section ref={statsRef} className="fade-in-up bg-muted">
-        <div className="container-main py-12">
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-8 text-center">
-            {aboutStats.map((s, i) => (
-              <div key={s.label} className={i < aboutStats.length - 1 ? "lg:border-r lg:border-border-light" : ""}>
-                <p className="text-3xl font-extrabold text-navy">{s.value}</p>
-                <p className="text-sm text-body-muted mt-1">{s.label}</p>
+      </div>
+    </section>
+  );
+}
+
+/* ─── Section: Why Us ─── */
+const whyFeatures = [
+  { icon: Banknote, title: "Zero Investment Model", desc: "No franchise fee. No royalty charges. Start your campus business without heavy capital." },
+  { icon: TrendingUp, title: "Earn Up To ₹1 Lakh/Month", desc: "Generate recurring monthly income through hostel orders and repeat customers." },
+  { icon: Building2, title: "Exclusive Campus Opportunity", desc: "Operate inside your campus and build a student-focused delivery ecosystem." },
+  { icon: ShoppingBag, title: "Proven Demand", desc: "Students order essentials every day — snacks, groceries, stationery, beverages, and more." },
+  { icon: Headphones, title: "Full Training & Support", desc: "Operations, Marketing, Team building, Delivery setup, Technology usage." },
+  { icon: ArrowUpRight, title: "Scalable Business", desc: "Start with one hostel and expand across your campus or multiple campuses." },
+];
+
+function WhyUsSection() {
+  const ref = useScrollReveal();
+  return (
+    <section id="why-us" className="section-padding bg-muted">
+      <div ref={ref} className="container-main fade-in-up text-center">
+        <p className="section-label mb-3">WHY COLLEGECART</p>
+        <h2 className="section-heading mb-12">Why Start A CollegeCart Franchise?</h2>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {whyFeatures.map((f) => (
+            <div key={f.title} className="card-base text-left">
+              <div className="w-12 h-12 rounded-lg bg-gold/10 flex items-center justify-center mb-4">
+                <f.icon size={24} className="text-gold" />
               </div>
-            ))}
-          </div>
+              <h3 className="font-bold text-navy text-lg mb-2">{f.title}</h3>
+              <p className="text-sm text-body-muted leading-relaxed">{f.desc}</p>
+            </div>
+          ))}
         </div>
-      </section>
-    </>
+      </div>
+    </section>
   );
 }
 
 /* ─── Section: How It Works ─── */
 const howSteps = [
-  { icon: Smartphone, num: "1", title: "Order", desc: "Students place order via app or WhatsApp" },
-  { icon: ShoppingBag, num: "2", title: "Confirm", desc: "We confirm & assign the order" },
-  { icon: Truck, num: "3", title: "Deliver", desc: "Delivery partner picks & delivers fast" },
-  { icon: CheckCircle, num: "4", title: "Receive", desc: "Student receives order at doorstep" },
-  { icon: Smile, num: "5", title: "Happy", desc: "Happy students, repeat orders" },
+  { icon: Smartphone, num: "1", title: "Apply", desc: "Submit your franchise application online." },
+  { icon: Shield, num: "2", title: "Verification", desc: "Our team reviews your campus and connects with you." },
+  { icon: BookOpen, num: "3", title: "Onboarding", desc: "Get trained on operations, app usage, and order management." },
+  { icon: Rocket, num: "4", title: "Launch", desc: "Start accepting student orders on your campus." },
+  { icon: TrendingUp, num: "5", title: "Grow", desc: "Expand hostel coverage, increase delivery volume, and scale earnings." },
 ];
 const howHighlights = [
   { icon: Clock, title: "20-30 mins", sub: "Average Delivery Time" },
@@ -155,7 +202,7 @@ function HowItWorksSection() {
       <section id="how-it-works" className="section-padding bg-background">
         <div ref={ref} className="container-main fade-in-up text-center">
           <p className="section-label mb-3">HOW IT WORKS</p>
-          <h2 className="section-heading mb-12">Simple. Smart. Seamless.</h2>
+          <h2 className="section-heading mb-12">Simple Business Model</h2>
           <div className="flex flex-row items-start justify-start lg:justify-center gap-6 lg:gap-0 overflow-x-auto pb-4 lg:pb-0">
             {howSteps.map((s, i) => (
               <div key={s.num} className="flex items-center shrink-0">
@@ -192,108 +239,39 @@ function HowItWorksSection() {
   );
 }
 
-/* ─── Section: Why Us ─── */
-const whyFeatures = [
-  { icon: BarChart3, title: "Proven Business Model", desc: "Tested and successful in multiple campuses." },
-  { icon: Building2, title: "High Demand", desc: "Daily orders for essentials, snacks & more." },
-  { icon: Banknote, title: "Low Investment", desc: "Start with minimal investment and low risk." },
-  { icon: Percent, title: "High Profit Margin", desc: "Attractive margins with recurring orders." },
-  { icon: Headphones, title: "Full Support", desc: "Training, technology and operations support." },
-  { icon: ArrowUpRight, title: "Scalable & Sustainable", desc: "Grow to multiple campuses with our support." },
+/* ─── Section: Earnings ─── */
+const earningTiers = [
+  { stage: "Beginner Stage", desc: "1 Hostel + Small Team", earnings: "₹15,000 – ₹30,000", color: "bg-gold/10" },
+  { stage: "Growth Stage", desc: "Multiple Hostels + Active Marketing", earnings: "₹40,000 – ₹70,000", color: "bg-gold/20" },
+  { stage: "Scale Stage", desc: "Full Campus Operations", earnings: "₹1,00,000+", color: "bg-gold/30" },
 ];
+const revenueSources = ["Delivery Margin", "Product Margin", "Campus Partnerships", "Brand Promotions", "Subscription Plans", "Student Events & Promotions"];
 
-function WhyUsSection() {
+function EarningsSection() {
   const ref = useScrollReveal();
   return (
-    <section id="why-us" className="section-padding bg-muted">
+    <section id="earnings" className="section-padding bg-background">
       <div ref={ref} className="container-main fade-in-up text-center">
-        <p className="section-label mb-3">WHY COLLEGECART</p>
-        <h2 className="section-heading mb-12">Why Partner With Us?</h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {whyFeatures.map((f) => (
-            <div key={f.title} className="card-base text-left">
-              <div className="w-12 h-12 rounded-lg bg-gold/10 flex items-center justify-center mb-4">
-                <f.icon size={24} className="text-gold" />
+        <p className="section-label mb-3">EARNINGS</p>
+        <h2 className="section-heading mb-12">How Much Can You Earn?</h2>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
+          {earningTiers.map((t) => (
+            <div key={t.stage} className="card-base text-center">
+              <div className={`w-16 h-16 rounded-full ${t.color} flex items-center justify-center mx-auto mb-4`}>
+                <DollarSign size={28} className="text-gold" />
               </div>
-              <h3 className="font-bold text-navy text-lg mb-2">{f.title}</h3>
-              <p className="text-sm text-body-muted leading-relaxed">{f.desc}</p>
+              <h3 className="font-bold text-navy text-lg mb-1">{t.stage}</h3>
+              <p className="text-sm text-body-muted mb-3">{t.desc}</p>
+              <p className="text-xs text-body-muted">Potential Monthly Earnings:</p>
+              <p className="text-2xl font-extrabold text-gold">{t.earnings}</p>
             </div>
           ))}
         </div>
-      </div>
-    </section>
-  );
-}
-
-/* ─── Section: Franchise Opportunity ─── */
-const franchiseCols = [
-  { icon: Users, title: "Who Can Apply?", items: ["Students", "Recent Graduates", "Entrepreneurs", "Anyone Passionate About Business"] },
-  { icon: Gift, title: "What You Get?", items: ["Brand & System Access", "Training & Onboarding", "Technology & App", "Marketing Support", "Ongoing Guidance"] },
-  { icon: Coins, title: "Investment", items: ["Low Initial Investment", "Affordable Setup Cost", "No Hidden Charges", "High Returns"] },
-  { icon: TrendingUp, title: "Earnings Potential", items: ["Monthly Profit ₹20,000 - ₹1,00,000+", "Get 100% of the Profit In Your Campus"] },
-];
-
-function FranchiseOpportunitySection() {
-  const ref = useScrollReveal();
-  return (
-    <section id="franchise-opportunity" className="section-padding bg-background">
-      <div ref={ref} className="container-main fade-in-up text-center">
-        <p className="section-label mb-3">FRANCHISE OPPORTUNITY</p>
-        <h2 className="section-heading mb-3">Own A Successful Campus Business</h2>
-        <p className="text-body-muted max-w-2xl mx-auto mb-12">Become a CollegeCart Campus Partner and build a profitable business with our proven system.</p>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 text-left">
-          {franchiseCols.map((c) => (
-            <div key={c.title} className="card-base">
-              <div className="w-12 h-12 rounded-lg bg-gold/10 flex items-center justify-center mb-4">
-                <c.icon size={24} className="text-gold" />
-              </div>
-              <h3 className="font-bold text-navy mb-3">{c.title}</h3>
-              <ul className="space-y-2">
-                {c.items.map((item) => (
-                  <li key={item} className="text-sm text-body-muted flex items-start gap-2">
-                    <span className="text-gold mt-1">•</span>{item}
-                  </li>
-                ))}
-              </ul>
-            </div>
-          ))}
-        </div>
-        <div className="bg-navy rounded-2xl px-8 py-8 flex flex-col md:flex-row items-center justify-between gap-4 mt-12">
-          <p className="text-navy-foreground font-bold text-lg text-center md:text-left">Ready to start your entrepreneurial journey?</p>
-          <a href="#contact" onClick={(e) => { e.preventDefault(); document.getElementById("contact")?.scrollIntoView({ behavior: "smooth" }); }} className="btn-primary shrink-0">Apply Now</a>
-        </div>
-      </div>
-    </section>
-  );
-}
-
-/* ─── Section: Franchise Process ─── */
-const processSteps = [
-  { num: "01", title: "Apply Now", desc: "Submit your application online" },
-  { num: "02", title: "Initial Discussion", desc: "We connect & understand your campus" },
-  { num: "03", title: "Approval", desc: "We review & approve your application" },
-  { num: "04", title: "Onboarding", desc: "Training & setup for your campus launch" },
-  { num: "05", title: "Launch", desc: "Start operations & grow your business" },
-];
-
-function FranchiseProcessSection() {
-  const ref = useScrollReveal();
-  return (
-    <section id="franchise-process" className="section-padding bg-muted">
-      <div ref={ref} className="container-main fade-in-up text-center">
-        <p className="section-label mb-3">FRANCHISE PROCESS</p>
-        <h2 className="section-heading mb-16">Your Journey With Us</h2>
-        <div className="relative">
-          <div className="hidden lg:block absolute top-6 left-[10%] right-[10%] h-0.5 bg-border-light" />
-          <div className="flex flex-row items-start justify-start lg:justify-center gap-6 lg:gap-4 overflow-x-auto pb-4 lg:pb-0">
-            {processSteps.map((s, i) => (
-              <div key={s.num} className="flex flex-col items-center relative shrink-0 w-28 lg:w-auto">
-                <div className={`w-11 h-11 lg:w-12 lg:h-12 rounded-full flex items-center justify-center font-bold text-xs lg:text-sm z-10 ${i === 0 ? "bg-gold text-white" : "bg-white text-navy border-2 border-border-light"}`}>
-                  {s.num}
-                </div>
-                <h3 className="font-bold text-navy mt-3 lg:mt-4 text-xs lg:text-sm">{s.title}</h3>
-                <p className="text-[10px] lg:text-xs text-body-muted mt-1 max-w-[120px] lg:max-w-[160px] leading-relaxed">{s.desc}</p>
-              </div>
+        <div className="card-base max-w-xl mx-auto">
+          <h3 className="font-bold text-navy text-lg mb-4">Revenue Sources</h3>
+          <div className="grid grid-cols-2 gap-2">
+            {revenueSources.map((s) => (
+              <p key={s} className="text-sm text-body-muted flex items-center gap-2"><span className="text-gold">•</span>{s}</p>
             ))}
           </div>
         </div>
@@ -302,37 +280,57 @@ function FranchiseProcessSection() {
   );
 }
 
-/* ─── Section: Success Stories ─── */
-const testimonials = [
-  { quote: "CollegeCart made life so easy. We get everything at our doorstep within 20 mins!", name: "Rohit Sharma", title: "Student, LPU", avatar: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=100&h=100&fit=crop&crop=face" },
-  { quote: "Great support, high profits and happy students. Best business decision!", name: "Ankit Verma", title: "Campus Partner, TIET", avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop&crop=face" },
-  { quote: "The system, the brand and the team — everything is just perfect.", name: "Siddharth Rao", title: "Campus Partner, RVCE", avatar: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=100&h=100&fit=crop&crop=face" },
+/* ─── Section: Benefits ─── */
+const benefits = [
+  "Full Access To CollegeCart Brand", "Order Management System", "Delivery Management Dashboard",
+  "Marketing Materials & Templates", "Student Growth Strategies", "Technical Support",
+  "Business Guidance", "Inventory Management Support", "Campus Launch Strategy", "Operational Training",
 ];
 
-function SuccessStoriesSection() {
+function BenefitsSection() {
   const ref = useScrollReveal();
   return (
-    <section id="success-stories" className="section-padding bg-background">
+    <section id="benefits" className="section-padding bg-muted">
       <div ref={ref} className="container-main fade-in-up text-center">
-        <p className="section-label mb-3">SUCCESS STORIES</p>
-        <h2 className="section-heading mb-12">Loved By Students. Trusted By Partners.</h2>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {testimonials.map((t) => (
-            <div key={t.name} className="card-base text-left relative">
-              <Quote size={28} className="text-gold/30 mb-3" />
-              <p className="text-body-muted text-sm leading-relaxed mb-6">"{t.quote}"</p>
-              <div className="flex items-center gap-3">
-                <img src={t.avatar} alt={t.name} className="w-10 h-10 rounded-full object-cover" width={40} height={40} loading="lazy" />
-                <div>
-                  <p className="font-bold text-navy text-sm">{t.name}</p>
-                  <p className="text-xs text-body-muted">{t.title}</p>
-                </div>
-              </div>
-              <div className="flex gap-0.5 mt-3">
-                {[...Array(5)].map((_, i) => (
-                  <Star key={i} size={14} className="text-gold fill-gold" />
-                ))}
-              </div>
+        <p className="section-label mb-3">FRANCHISE BENEFITS</p>
+        <h2 className="section-heading mb-12">What You Get With CollegeCart</h2>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 max-w-3xl mx-auto">
+          {benefits.map((b) => (
+            <div key={b} className="card-base !py-4 flex items-center gap-3 text-left">
+              <CheckCircle size={20} className="text-gold shrink-0" />
+              <p className="text-sm font-medium text-navy">{b}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ─── Section: Who Can Apply ─── */
+const applicants = [
+  { icon: GraduationCap, label: "College Students" },
+  { icon: Rocket, label: "Student Entrepreneurs" },
+  { icon: HomeIcon, label: "Hostel Residents" },
+  { icon: Megaphone, label: "Campus Influencers" },
+  { icon: UserCheck, label: "Recent Graduates" },
+  { icon: Briefcase, label: "Local Entrepreneurs" },
+  { icon: Heart, label: "Student Communities" },
+];
+
+function WhoCanApplySection() {
+  const ref = useScrollReveal();
+  return (
+    <section id="who-can-apply" className="section-padding bg-background">
+      <div ref={ref} className="container-main fade-in-up text-center">
+        <p className="section-label mb-3">WHO CAN APPLY</p>
+        <h2 className="section-heading mb-4">Who Can Become A Campus Partner?</h2>
+        <p className="text-body-muted mb-12">No prior business experience required.</p>
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-3xl mx-auto">
+          {applicants.map((a) => (
+            <div key={a.label} className="card-base flex flex-col items-center text-center !py-6">
+              <a.icon size={28} className="text-gold mb-2" />
+              <p className="text-sm font-bold text-navy">{a.label}</p>
             </div>
           ))}
         </div>
@@ -343,11 +341,11 @@ function SuccessStoriesSection() {
 
 /* ─── Section: FAQ / Support ─── */
 const faqs = [
-  { q: "What is CollegeCart Franchise?", a: "CollegeCart Franchise allows you to run a campus delivery business under the CollegeCart brand, using our proven systems, technology, and support to serve students on your campus." },
-  { q: "How much investment is required?", a: "The initial investment is minimal and affordable. We keep setup costs low so that students and young entrepreneurs can get started without a heavy financial burden." },
-  { q: "What is the expected profit?", a: "Monthly profits typically range from ₹20,000 to ₹1,00,000+ depending on campus size and order volume. You keep 100% of the profit from your campus operations." },
-  { q: "Do I need previous experience?", a: "No prior business experience is needed. We provide complete training, onboarding, and ongoing support to help you succeed from day one." },
-  { q: "What support will I get?", a: "You get full access to our brand, technology platform, marketing materials, training programs, and a dedicated operations support team to guide you at every step." },
+  { q: "Is CollegeCart franchise really free?", a: "Yes. There is no franchise fee or royalty. We grow together with campus partners." },
+  { q: "How much can I earn?", a: "Earnings depend on campus size, operations, and order volume. Active partners can potentially earn up to ₹1 lakh/month." },
+  { q: "Do I need previous business experience?", a: "No. We provide complete training and operational support." },
+  { q: "How fast can I start?", a: "Most campuses can launch within 7–14 days after approval." },
+  { q: "What support will I receive?", a: "Technology, operations guidance, onboarding, marketing strategies, and ongoing support." },
 ];
 
 function SupportSection() {
@@ -378,56 +376,265 @@ function SupportSection() {
   );
 }
 
-/* ─── Section: Contact ─── */
+/* ─── Section: Final CTA ─── */
+function FinalCTASection() {
+  const ref = useScrollReveal();
+  return (
+    <section className="section-padding bg-navy">
+      <div ref={ref} className="container-main fade-in-up text-center text-navy-foreground">
+        <h2 className="text-3xl lg:text-4xl font-extrabold mb-4">Ready To Build Your Campus Business?</h2>
+        <p className="text-white/70 max-w-2xl mx-auto mb-4">
+          Join India's growing student entrepreneurship movement with CollegeCart.
+        </p>
+        <p className="text-white/70 max-w-2xl mx-auto mb-8">
+          Launch your own campus delivery business with zero investment and unlimited growth potential.
+        </p>
+        <div className="flex flex-wrap gap-4 justify-center">
+          <a href="#contact" onClick={(e) => { e.preventDefault(); document.getElementById("contact")?.scrollIntoView({ behavior: "smooth" }); }} className="btn-primary">Apply Now</a>
+          <a href="tel:+917248316506" className="btn-secondary !border-white !text-white hover:!bg-white/10">Talk To Our Team</a>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ─── Section: Contact / Application Form ─── */
+const indianStates = [
+  "Andhra Pradesh", "Arunachal Pradesh", "Assam", "Bihar", "Chhattisgarh", "Goa", "Gujarat",
+  "Haryana", "Himachal Pradesh", "Jharkhand", "Karnataka", "Kerala", "Madhya Pradesh",
+  "Maharashtra", "Manipur", "Meghalaya", "Mizoram", "Nagaland", "Odisha", "Punjab",
+  "Rajasthan", "Sikkim", "Tamil Nadu", "Telangana", "Tripura", "Uttar Pradesh",
+  "Uttarakhand", "West Bengal", "Delhi", "Chandigarh",
+];
+
 function ContactSection() {
   const ref = useScrollReveal();
   const [submitted, setSubmitted] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+  const [error, setError] = useState("");
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setSubmitting(true);
+    setError("");
+
+    const form = e.currentTarget;
+    const fd = new FormData(form);
+
+    // Upload files
+    let collegeIdUrl = "";
+    let govIdUrl = "";
+    let campusPhotosUrl = "";
+
+    const collegeId = (form.elements.namedItem("college_id") as HTMLInputElement)?.files?.[0];
+    const govId = (form.elements.namedItem("government_id") as HTMLInputElement)?.files?.[0];
+    const campusPhotos = (form.elements.namedItem("campus_photos") as HTMLInputElement)?.files?.[0];
+
+    try {
+      if (collegeId) {
+        const name = `${Date.now()}-college-${collegeId.name}`;
+        await supabase.storage.from("application-uploads").upload(name, collegeId);
+        collegeIdUrl = supabase.storage.from("application-uploads").getPublicUrl(name).data.publicUrl;
+      }
+      if (govId) {
+        const name = `${Date.now()}-gov-${govId.name}`;
+        await supabase.storage.from("application-uploads").upload(name, govId);
+        govIdUrl = supabase.storage.from("application-uploads").getPublicUrl(name).data.publicUrl;
+      }
+      if (campusPhotos) {
+        const name = `${Date.now()}-campus-${campusPhotos.name}`;
+        await supabase.storage.from("application-uploads").upload(name, campusPhotos);
+        campusPhotosUrl = supabase.storage.from("application-uploads").getPublicUrl(name).data.publicUrl;
+      }
+
+      const { error: insertError } = await supabase.from("franchise_applications").insert({
+        full_name: fd.get("full_name") as string,
+        phone: fd.get("phone") as string,
+        whatsapp: fd.get("whatsapp") as string || null,
+        email: fd.get("email") as string,
+        linkedin: fd.get("linkedin") as string || null,
+        college_name: fd.get("college_name") as string,
+        campus_location: fd.get("campus_location") as string,
+        state: fd.get("state") as string,
+        num_hostels: fd.get("num_hostels") as string || null,
+        student_strength: fd.get("student_strength") as string || null,
+        hostel_type: fd.get("hostel_type") as string || null,
+        why_collegecart: fd.get("why_collegecart") as string || null,
+        team_experience: fd.get("team_experience") as string || null,
+        has_delivery_partners: fd.get("has_delivery_partners") as string || null,
+        starting_hostel: fd.get("starting_hostel") as string || null,
+        target_students: fd.get("target_students") as string || null,
+        outside_delivery_allowed: fd.get("outside_delivery_allowed") as string || null,
+        existing_delivery_apps: fd.get("existing_delivery_apps") as string || null,
+        launch_timeline: fd.get("launch_timeline") as string || null,
+        can_manage_daily: fd.get("can_manage_daily") as string || null,
+        college_id_url: collegeIdUrl || null,
+        government_id_url: govIdUrl || null,
+        campus_photos_url: campusPhotosUrl || null,
+        acknowledged: fd.get("acknowledged") === "on",
+      });
+
+      if (insertError) throw insertError;
+      setSubmitted(true);
+    } catch (err: any) {
+      setError(err.message || "Something went wrong");
+    }
+    setSubmitting(false);
+  };
+
+  const inputClass = "w-full px-4 py-3 rounded-lg border border-border-light text-sm focus:outline-none focus:border-gold transition-colors";
+
   return (
     <section id="contact" className="section-padding bg-background">
       <div ref={ref} className="container-main fade-in-up">
         <div className="flex flex-col lg:flex-row gap-12">
-          <div className="lg:w-[55%]">
+          <div className="lg:w-[40%]">
             <p className="section-label mb-3">GET IN TOUCH</p>
             <h2 className="section-heading mb-4">Let's Build Something Amazing Together</h2>
             <p className="text-body-muted leading-relaxed mb-8">Have questions? We're here to help you start your journey with CollegeCart.</p>
             <div className="space-y-5">
               <div className="flex items-center gap-4">
                 <div className="w-10 h-10 rounded-full bg-gold/10 flex items-center justify-center"><Phone size={18} className="text-gold" /></div>
-                <span className="text-sm font-medium text-navy">+91 98765 43210</span>
+                <span className="text-sm font-medium text-navy">+91 7248316506</span>
               </div>
               <div className="flex items-center gap-4">
                 <div className="w-10 h-10 rounded-full bg-gold/10 flex items-center justify-center"><Mail size={18} className="text-gold" /></div>
-                <span className="text-sm font-medium text-navy">franchise@collegecart.in</span>
+                <span className="text-sm font-medium text-navy">franchise@collegecarts.in</span>
               </div>
               <div className="flex items-center gap-4">
                 <div className="w-10 h-10 rounded-full bg-gold/10 flex items-center justify-center"><Globe size={18} className="text-gold" /></div>
-                <span className="text-sm font-medium text-navy">www.collegecart.in</span>
+                <span className="text-sm font-medium text-navy">www.collegecarts.in</span>
               </div>
             </div>
           </div>
-          <div className="lg:w-[45%]">
+          <div className="lg:w-[60%]">
             <div className="card-base">
-              <h3 className="font-bold text-navy text-xl mb-6">Apply For Franchise</h3>
+              <h3 className="font-bold text-navy text-xl mb-6">Apply For Campus Franchise</h3>
               {submitted ? (
-                <div className="text-center py-8">
-                  <p className="text-navy font-bold text-lg">Thank you!</p>
-                  <p className="text-body-muted text-sm mt-2">We'll get back to you within 24 hours.</p>
+                <div className="text-center py-12">
+                  <Rocket size={48} className="text-gold mx-auto mb-4" />
+                  <p className="text-navy font-bold text-lg">Application Submitted!</p>
+                  <p className="text-body-muted text-sm mt-2">Thank you! We'll get back to you within 24-48 hours.</p>
                 </div>
               ) : (
-                <form className="space-y-4" onSubmit={(e) => { e.preventDefault(); setSubmitted(true); }}>
-                  <input type="text" placeholder="Full Name" required className="w-full px-4 py-3 rounded-lg border border-border-light text-sm focus:outline-none focus:border-gold transition-colors" />
-                  <input type="tel" placeholder="Phone Number" required className="w-full px-4 py-3 rounded-lg border border-border-light text-sm focus:outline-none focus:border-gold transition-colors" />
-                  <input type="email" placeholder="Email Address" required className="w-full px-4 py-3 rounded-lg border border-border-light text-sm focus:outline-none focus:border-gold transition-colors" />
-                  <select required className="w-full px-4 py-3 rounded-lg border border-border-light text-sm text-body-muted focus:outline-none focus:border-gold transition-colors">
-                    <option value="">Select College / Location</option>
-                    <option value="north">North India</option>
-                    <option value="south">South India</option>
-                    <option value="east">East India</option>
-                    <option value="west">West India</option>
-                    <option value="central">Central India</option>
-                  </select>
-                  <textarea placeholder="Tell us about yourself" rows={4} className="w-full px-4 py-3 rounded-lg border border-border-light text-sm resize-none focus:outline-none focus:border-gold transition-colors" />
-                  <button type="submit" className="btn-primary w-full">Submit Application</button>
+                <form className="space-y-6" onSubmit={handleSubmit}>
+                  {error && <p className="text-destructive text-sm bg-destructive/10 p-2 rounded">{error}</p>}
+
+                  {/* Personal Information */}
+                  <div>
+                    <h4 className="font-bold text-navy text-sm mb-3 border-b border-border-light pb-2">Personal Information</h4>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                      <input name="full_name" placeholder="Full Name *" required className={inputClass} />
+                      <input name="phone" type="tel" placeholder="Phone Number *" required className={inputClass} />
+                      <input name="whatsapp" type="tel" placeholder="WhatsApp Number" className={inputClass} />
+                      <input name="email" type="email" placeholder="Email Address *" required className={inputClass} />
+                      <input name="linkedin" placeholder="LinkedIn Profile (Optional)" className={`${inputClass} md:col-span-2`} />
+                    </div>
+                  </div>
+
+                  {/* College Details */}
+                  <div>
+                    <h4 className="font-bold text-navy text-sm mb-3 border-b border-border-light pb-2">College Details</h4>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                      <input name="college_name" placeholder="College/University Name *" required className={inputClass} />
+                      <input name="campus_location" placeholder="Campus Location *" required className={inputClass} />
+                      <select name="state" required className={`${inputClass} text-body-muted`}>
+                        <option value="">Select State *</option>
+                        {indianStates.map((s) => <option key={s} value={s}>{s}</option>)}
+                      </select>
+                      <input name="num_hostels" placeholder="Number of Hostels" className={inputClass} />
+                      <input name="student_strength" placeholder="Approx Student Strength" className={inputClass} />
+                      <select name="hostel_type" className={`${inputClass} text-body-muted`}>
+                        <option value="">Hostel Type</option>
+                        <option value="Boys Hostel">Boys Hostel</option>
+                        <option value="Girls Hostel">Girls Hostel</option>
+                        <option value="Both">Both</option>
+                      </select>
+                    </div>
+                  </div>
+
+                  {/* Business Information */}
+                  <div>
+                    <h4 className="font-bold text-navy text-sm mb-3 border-b border-border-light pb-2">Business Information</h4>
+                    <div className="space-y-3">
+                      <textarea name="why_collegecart" rows={3} placeholder="Why do you want to start CollegeCart?" className={`${inputClass} resize-none`} />
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                        <select name="team_experience" className={`${inputClass} text-body-muted`}>
+                          <option value="">Have you handled any team before?</option>
+                          <option value="Yes">Yes</option>
+                          <option value="No">No</option>
+                        </select>
+                        <select name="has_delivery_partners" className={`${inputClass} text-body-muted`}>
+                          <option value="">Do you have delivery partners/team?</option>
+                          <option value="Yes">Yes</option>
+                          <option value="No">No</option>
+                        </select>
+                        <input name="starting_hostel" placeholder="Which hostel do you want to start from?" className={inputClass} />
+                        <input name="target_students" placeholder="Estimated students you can target" className={inputClass} />
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Operational Details */}
+                  <div>
+                    <h4 className="font-bold text-navy text-sm mb-3 border-b border-border-light pb-2">Operational Details</h4>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                      <select name="outside_delivery_allowed" className={`${inputClass} text-body-muted`}>
+                        <option value="">Outside deliveries allowed in campus?</option>
+                        <option value="Yes">Yes</option>
+                        <option value="No">No</option>
+                        <option value="Not Sure">Not Sure</option>
+                      </select>
+                      <select name="existing_delivery_apps" className={`${inputClass} text-body-muted`}>
+                        <option value="">Existing delivery apps inside campus?</option>
+                        <option value="Yes">Yes</option>
+                        <option value="No">No</option>
+                        <option value="Not Sure">Not Sure</option>
+                      </select>
+                      <select name="launch_timeline" className={`${inputClass} text-body-muted`}>
+                        <option value="">Preferred launch timeline</option>
+                        <option value="Immediately">Immediately</option>
+                        <option value="Within 1 Week">Within 1 Week</option>
+                        <option value="Within 2 Weeks">Within 2 Weeks</option>
+                        <option value="Within 1 Month">Within 1 Month</option>
+                      </select>
+                      <select name="can_manage_daily" className={`${inputClass} text-body-muted`}>
+                        <option value="">Can you manage daily operations?</option>
+                        <option value="Yes">Yes</option>
+                        <option value="No">No</option>
+                        <option value="With Help">With Help</option>
+                      </select>
+                    </div>
+                  </div>
+
+                  {/* Upload Section */}
+                  <div>
+                    <h4 className="font-bold text-navy text-sm mb-3 border-b border-border-light pb-2">Upload Documents</h4>
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+                      <div>
+                        <label className="text-xs text-body-muted block mb-1">College ID</label>
+                        <input name="college_id" type="file" accept="image/*,.pdf" className="text-sm w-full" />
+                      </div>
+                      <div>
+                        <label className="text-xs text-body-muted block mb-1">Government ID</label>
+                        <input name="government_id" type="file" accept="image/*,.pdf" className="text-sm w-full" />
+                      </div>
+                      <div>
+                        <label className="text-xs text-body-muted block mb-1">Campus Photos (Optional)</label>
+                        <input name="campus_photos" type="file" accept="image/*" className="text-sm w-full" />
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Acknowledgement */}
+                  <label className="flex items-start gap-2 text-sm text-body-muted cursor-pointer">
+                    <input name="acknowledged" type="checkbox" required className="mt-1 accent-gold" />
+                    I understand this is an independent campus partnership opportunity.
+                  </label>
+
+                  <button type="submit" disabled={submitting} className="btn-primary w-full text-base">
+                    {submitting ? "Submitting..." : "🚀 Apply For Free Franchise"}
+                  </button>
                 </form>
               )}
             </div>
@@ -445,12 +652,13 @@ function HomePage() {
       <HeroSection />
       <StatsBar />
       <AboutSection />
-      <HowItWorksSection />
       <WhyUsSection />
-      <FranchiseOpportunitySection />
-      <FranchiseProcessSection />
-      <SuccessStoriesSection />
+      <HowItWorksSection />
+      <EarningsSection />
+      <BenefitsSection />
+      <WhoCanApplySection />
       <SupportSection />
+      <FinalCTASection />
       <ContactSection />
     </Layout>
   );
